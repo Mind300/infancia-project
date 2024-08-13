@@ -23,6 +23,7 @@ class Parents extends Model
         'mother_name',
         'mother_mobile',
         'mother_job',
+        'emergency_phone',
         'nursery_id',
         'user_id'
     ];
