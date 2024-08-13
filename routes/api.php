@@ -69,6 +69,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResource('subjects', 'Subjects\SubjectsController');
     Route::get('classes-subject/{id}', 'Subjects\SubjectsController@classSubject');
     Route::post('assign-subject', 'Subjects\SubjectsController@assignSubject');
+    Route::delete('remove-subject/{subject_id}/{class_id}', 'Subjects\SubjectsController@removeSubject');
 
     // Meals Resource
     Route::apiResource('meals', 'Meals\MealsController');

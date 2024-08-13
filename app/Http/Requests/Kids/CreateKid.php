@@ -35,7 +35,6 @@ class CreateKid extends FormRequest
             'birthdate' =>  'required|string',
             'class_id' =>  'required|integer',
             'has_medical_case' =>  'required|integer',
-            'address' =>  'required|string',
 
             // Parents
             'father_mobile' =>  'required|string',

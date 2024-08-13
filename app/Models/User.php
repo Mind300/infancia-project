@@ -34,7 +34,8 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         'phone',
         'password',
         'country',
-        'city'
+        'city',
+        'address'
     ];
 
     /**

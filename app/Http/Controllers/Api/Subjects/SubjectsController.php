@@ -89,6 +89,16 @@ class SubjectsController extends Controller
         return contentResponse($subjectClass, 'Assign Subject To Class Successfully');
     }
 
+    
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function removeSubject(string $subject_id, string $class_id)
+    {
+        $subjectClass = SubjectsClasses::where($subject_id, $class_id)->forceDelete();
+        return contentResponse($subjectClass, 'Assign Subject To Class Successfully');
+    }
+
     /**
      * Remove the specified resource from storage.
      */
