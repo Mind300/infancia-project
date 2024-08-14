@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FAQ\faqRequest;
+use App\Http\Requests\FAQ\FaqRequest;
 use App\Models\Faq;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FaqController extends Controller

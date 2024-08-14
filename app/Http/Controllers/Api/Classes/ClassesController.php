@@ -111,7 +111,7 @@ class ClassesController extends Controller
 
     public function absent(AbsentRequest $request)
     {
-        $date = Carbon::tomorrow()->format('Y-m-d');
+        $date = Carbon::today()->format('Y-m-d');
 
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
