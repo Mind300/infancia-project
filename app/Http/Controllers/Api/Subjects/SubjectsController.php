@@ -100,7 +100,7 @@ class SubjectsController extends Controller
         try {
             $subjectClass = SubjectsClasses::where('subject_id', $subject_id)->where('class_id', $class_id)->forceDelete();
             DB::commit();
-            return messageResponse($subjectClass, 'Assign Subject To Class Successfully');
+            return messageResponse('Assign Subject To Class Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();
             return messageResponse($error->getMessage(), 403);
