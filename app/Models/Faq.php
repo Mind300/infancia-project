@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Reviews extends Model
+class Faq extends Model
 {
     use HasFactory, HasApiTokens, HasFactory, Notifiable;
 
@@ -17,14 +17,8 @@ class Reviews extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'review',
-        'rate',
-        'user_id',
+        'questions',
+        'answer',
         'nursery_id',
     ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
-    }
 }

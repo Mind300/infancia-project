@@ -51,6 +51,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
+// Faq Resource
+Route::apiResource('/faq', 'Nurseries\FaqController');
 
 // Roles
 Route::apiResource('roles', 'Roles\RoleController');

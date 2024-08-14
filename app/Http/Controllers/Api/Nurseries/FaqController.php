@@ -3,42 +3,40 @@
 namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Reviews\ReviewsRequest;
-use App\Models\Reviews;
+use App\Http\Requests\FAQ\faqRequest;
+use App\Models\Faq;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ReviewsController extends Controller
+class FaqController extends Controller
 {
-    // Variables
     private $nursery_id;
 
     public function __construct()
     {
         $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id;
     }
-
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $reviews = Reviews::with('user')->where('nursery_id', $this->nursery_id)->get();
-        return contentResponse($reviews, fetchAll('Reviews'));
+        $faq = Faq::where('nursery_id', $this->nursery_id)->get();
+        return contentResponse($faq, fetchAll('FAQ'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ReviewsRequest $request)
+    public function store(FaqRequest $request)
     {
         DB::beginTransaction();
+        $requestValidated = $request->validated();
+        $requestValidated['nursery_id'] = $this->nursery_id;
         try {
-            $requestValidated = $request->validated();
-            $requestValidated['nursery_id'] = $this->nursery_id;
-            $reviews = Reviews::create($requestValidated);
+            $faq = Faq::create($requestValidated);
             DB::commit();
-            return messageResponse('Created Review Successfully');
+            return messageResponse('Created FAQ Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();
             return messageResponse($error->getMessage(), 403);
@@ -48,35 +46,44 @@ class ReviewsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Reviews $review)
+    public function show(Faq $faq)
     {
-        return contentResponse($review, fetchAll('Review'));
+        return contentResponse($faq, fetchOne('FAQ'));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Faq $faq)
+    {
+        return contentResponse($faq, fetchOne('FAQ'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(ReviewsRequest $request, Reviews $review)
+    public function update(FaqRequest $request, Faq $faq)
     {
         DB::beginTransaction();
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
         try {
-            $reviews = $review->update($requestValidated);
+            $faq->update($requestValidated);
             DB::commit();
-            return messageResponse('Updated Review Successfully');
+            return messageResponse('Updated FAQ Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();
             return messageResponse($error->getMessage(), 403);
         }
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reviews $review)
+    public function destroy(Faq $faq)
     {
-        $review->forceDelete();
-        return messageResponse('Review Deleted Successfully');
+        $faq->forceDelete();
+        return messageResponse('Deleted FAQ Successfully');
     }
 }

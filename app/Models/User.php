@@ -107,6 +107,11 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
     // {
     //     return $this->hasOne('App\Models\Employee', 'user_id');
     // }
+    
+    public function review()
+    {
+        return $this->hasOne(Reviews::class, 'user_id');
+    }
 
     // public function requests()
     // {
