@@ -89,22 +89,30 @@ class ClassesController extends Controller
     public function kidsClassFetch($date = null, $class_id)
     {
         $kids = Kids::select('id', 'kid_name')->with([
-            'absent'=>function($query){
-                $query->select('kid_id','absent');
-            },'meal_amount' => function ($query) {
-                $query->select('amount', 'meal_id', 'kid_id');
+            'absent' => function ($query) {
+                $query->select('kid_id', 'absent');
             },
-            'meal_amount.meal' => function ($query) {
+            'meal_amount' => function ($query)use ($date){
+                $query->select('amount', 'meal_id', 'kid_id')->whereDate('created_at', $date);
+            },
+            'meal_amount.meal' => function ($query) use ($date) {
                 $query->select('id', 'type');
             },
             'activites' => function ($query) use ($date) {
                 $query->whereDate('created_at', $date);
             }
         ])->where('class_id', $class_id)->get();
-
-        if ($kids->isEmpty()) {
-            $kids = Kids::with('absent')->where('class_id', $class_id)->get()->setVisible(['id', 'kid_name']);
-        }
+       
+        $kids = $kids->flatMap(function ($kid) use ($date) {
+            $absence = $kid->absent->whereDate('created_at', $date)->first();
+            return [
+                'id' => $kid->id,
+                'kid_name' => $kid->kid_name,
+                'absent' => $absence->absent ?? 0,
+                'meal_Amount' => $kid->meal_amount,
+                'activites' => $kid->activites,
+            ];
+        });
 
         return contentResponse($kids, fetchAll('Class Activity'));
     }
@@ -117,7 +125,7 @@ class ClassesController extends Controller
         $requestValidated['nursery_id'] = $this->nursery_id;
 
         $absent = Absence::where('kid_id', $requestValidated['kid_id'])->whereDate('created_at', $date)->first();
-        
+
         if ($absent) {
             $absent->update(['absent' => !$absent->absent]);
         } else {
