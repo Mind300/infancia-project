@@ -48,7 +48,7 @@ class SubjectsController extends Controller
     public function show(Subjects $subject)
     {
         $subject->where('nursery_id', $this->nursery_id);
-        return contentResponse($subject, fetchOne($subject->title.' Subject'));
+        return contentResponse($subject, fetchOne($subject->title . ' Subject'));
     }
 
     /**
@@ -89,13 +89,13 @@ class SubjectsController extends Controller
         return contentResponse($subjectClass, 'Assign Subject To Class Successfully');
     }
 
-    
+
     /**
      * Remove the specified resource from storage.
      */
     public function removeSubject(string $subject_id, string $class_id)
     {
-        $subjectClass = SubjectsClasses::where($subject_id, $class_id)->forceDelete();
+        $subjectClass = SubjectsClasses::where('subject_id', $subject_id)->where('class_id', $class_id)->forceDelete();
         return contentResponse($subjectClass, 'Assign Subject To Class Successfully');
     }
 
