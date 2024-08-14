@@ -24,7 +24,6 @@ class MealAmounts extends Model
     
      protected $hidden = [
          'kid_id',
-        'created_at',
         'updated_at',
     ];
 
