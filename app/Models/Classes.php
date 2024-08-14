@@ -29,7 +29,7 @@ class Classes extends Model
         return $this->hasOne(Nurseries::class, 'nursery_id');
     }
 
-    public function schedule()
+    public function schedules()
     {
         return $this->hasMany(Schedule::class, 'class_id');
     }

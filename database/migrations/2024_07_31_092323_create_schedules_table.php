@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('schedules', function (Blueprint $table) {
             $table->id();
+            $table->longText('content')->nullable();
             $table->enum('days', array('SAT','SUN','MON','TUE','WED','THU','FRI'));
 			$table->foreignId('class_id')->constrained('classes')->onDelete('cascade');
 			$table->foreignId('nursery_id')->constrained('nurseries')->onDelete('cascade');

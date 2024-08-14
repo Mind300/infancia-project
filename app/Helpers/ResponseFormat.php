@@ -6,7 +6,7 @@ if (!function_exists('authResponse')) {
     {
         return response()->json([
             'id' => $user->id,
-            'nursery_id' => $user->nursery->id,
+            'nursery_id' => $user->nursery->id ?? $user->parent->nursery_id  ?? null,
             'name' => $user->name,
             'email' => $user->email,
             'role' => $user->roles[0]->name,

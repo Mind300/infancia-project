@@ -17,6 +17,7 @@ class Schedule extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'content',
         'days',
         'class_id',
         'subject_id',
@@ -25,7 +26,7 @@ class Schedule extends Model
 
     public function classes()
     {
-        return $this->belongsToMany(Classes::class, 'class_id');
+        return $this->belongsTo(Classes::class, 'class_id');
     }
 
     public function nursery()
@@ -35,6 +36,6 @@ class Schedule extends Model
 
     public function subject()
     {
-        return $this->hasMany(Subject::class, 'subject_id');
+        return $this->hasMany(Subjects::class, 'subject_id');
     }
 }

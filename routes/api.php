@@ -53,6 +53,7 @@ Route::apiResource('nurseries', 'Nurseries\NurseriesController');
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
 // Faq Resource
 Route::apiResource('/faq', 'Nurseries\FaqController');
+Route::apiResource('/schedules', 'Schedules\SchedulesController');
 
 // Roles
 Route::apiResource('roles', 'Roles\RoleController');
