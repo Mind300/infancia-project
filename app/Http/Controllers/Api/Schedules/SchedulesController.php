@@ -52,18 +52,18 @@ class SchedulesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Classes $class)
+    public function show(string $class_id)
     {
-        $class->schedules;
+        $class = Classes::with('schedules')->find($class_id);
         return contentResponse($class, fetchOne('Schedule'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Schedule $schedule)
+    public function edit(Classes $class)
     {
-        return contentResponse($schedule, fetchOne('Schedule'));
+        return contentResponse($class, fetchOne('Schedule'));
     }
 
     /**

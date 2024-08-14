@@ -24,6 +24,16 @@ class ReviewsController extends Controller
     public function index()
     {
         $reviews = Reviews::with('user')->where('nursery_id', $this->nursery_id)->get();
+        $reviews = $reviews->map(function($review){
+            return [
+                'id' => $review->id,
+                'review' => $review->review,
+                'rate' => $review->rate,
+                'user_name' => $review->user->name,
+                'user_id' => $review->user->name,
+                'nursery_id' => $review->nursery_id,
+            ];
+        });
         return contentResponse($reviews, fetchAll('Reviews'));
     }
 
