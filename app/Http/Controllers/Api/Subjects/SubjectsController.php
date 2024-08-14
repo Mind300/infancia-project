@@ -98,7 +98,7 @@ class SubjectsController extends Controller
     {
         DB::beginTransaction();
         try {
-            $subjectClass = SubjectsClasses::find($assign_id);
+            $subjectClass = SubjectsClasses::find($assign_id)->forceDelete();
             DB::commit();
             return messageResponse('Assign Subject To Class Successfully');
         } catch (\Throwable $error) {
