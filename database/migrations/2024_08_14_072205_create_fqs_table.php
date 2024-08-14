@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('fqs', function (Blueprint $table) {
             $table->id();
+            $table->longText('questions');
+            $table->longText('answer');
+            $table->foreignId('nursery_id')->constrained('nurseries')->onDelete('cascade');
             $table->timestamps();
         });
     }

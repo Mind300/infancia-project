@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
+// Reviews Resource
+Route::apiResource('/reviews', 'Nurseries\ReviewsController');
 
 // Roles
 Route::apiResource('roles', 'Roles\RoleController');
@@ -89,6 +91,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Parent Request Resource
     Route::apiResource('/parent', 'Parent\ParentController');
+
+    
 });
 
 Route::get('/sendmail', 'Test\TestController@sendmail');
