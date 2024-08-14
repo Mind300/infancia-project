@@ -8,6 +8,22 @@ use App\Models\Nurseries;
 
 class GuestController extends Controller
 {
+    public function index()
+    {
+        $nurseryFind = Nurseries::has('user')->get();
+
+        $nurseryFind = $nurseryFind->map(function($nursery){
+            return [
+                'nursery_id' => $nursery->id,
+                'nursery_name' => $nursery->name,
+                'country' => $nursery->user->country,
+                'city' => $nursery->user->city,
+                'address' => $nursery->user->address,
+            ];
+        });
+        return contentResponse($nurseryFind, fetchAll('name'));
+    }
+
     /**
      * Store a newly search about nursery.
      */
