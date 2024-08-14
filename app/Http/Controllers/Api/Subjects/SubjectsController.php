@@ -7,6 +7,7 @@ use App\Http\Requests\Subjects\SubjectClass;
 use App\Http\Requests\Subjects\SubjectRequest;
 use App\Models\Subjects;
 use App\Models\SubjectsClasses;
+use Illuminate\Support\Facades\DB;
 
 class SubjectsController extends Controller
 {
@@ -95,8 +96,15 @@ class SubjectsController extends Controller
      */
     public function removeSubject(string $class_id, string $subject_id)
     {
-        $subjectClass = SubjectsClasses::where('subject_id', $subject_id)->where('class_id', $class_id)->forceDelete();
-        return messageResponse($subjectClass, 'Assign Subject To Class Successfully');
+        DB::beginTransaction();
+        try {
+            $subjectClass = SubjectsClasses::where('subject_id', $subject_id)->where('class_id', $class_id)->forceDelete();
+            DB::commit();
+            return messageResponse($subjectClass, 'Assign Subject To Class Successfully');
+        } catch (\Throwable $error) {
+            DB::rollBack();
+            return messageResponse($error->getMessage(), 403);
+        }
     }
 
     /**
