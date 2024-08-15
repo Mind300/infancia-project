@@ -58,8 +58,8 @@ class SchedulesController extends Controller
         $class_schedule = $class->subjects->map(function($subject) use ($class){
             return 
             [
-                'subject' => $subject,
-                'content' => $class->schedule->where('subject_id', $subject->id)
+                'subject' => $subject->subjects,
+                'subject_content' => $class->schedules?->where('subject_id', $subject->subject_id)->first()
             ];
         });
         return contentResponse($class_schedule, fetchOne('Schedule'));

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('kid_id')->constrained('kids')->onDelete('cascade');
             $table->foreignId('nursery_id')->constrained('nurseries');
 
-            $table->time('napping')->nullable();
+            $table->string('napping')->nullable();
             $table->integer('mood')->nullable();
             $table->string('comment')->nullable();
 
