@@ -89,22 +89,26 @@ class ClassesController extends Controller
     public function kidsClassFetch($date = null, $class_id)
     {
         $date = Carbon::parse($date);
-        $day = $date->shortDayName;
+        $day = $date->shortDayName; // Gets the short name of the day (e.g., "Mon" for Monday)
 
         $kids = Kids::select('id', 'kid_name')->with([
             'absent' => function ($query) {
-                $query->select('kid_id', 'absent');
+                $query->select('kid_id', 'absent', 'created_at'); // Make sure to include created_at if you need to filter by it later
             },
-            'meal_amount.meal' => function ($query) use ($day) {
-                $query->select('id','type')->where('days', $day);
+            'meal_amount' => function ($query) use ($date, $day) {
+                $query->whereDate('created_at', $date)
+                    ->whereHas('meal', function ($query) use ($day) {
+                        $query->where('days', $day);
+                    });
             },
             'activites' => function ($query) use ($date) {
                 $query->whereDate('created_at', $date);
             }
         ])->where('class_id', $class_id)->get();
 
-        $kids = $kids->flatMap(function ($kid) use ($date) {
+        $kids = $kids->map(function ($kid) use ($date) {
             $absence = $kid->absent->whereDate('created_at', $date)->first();
+
             return [
                 'id' => $kid->id,
                 'kid_name' => $kid->kid_name,
