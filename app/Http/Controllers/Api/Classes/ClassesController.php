@@ -107,7 +107,7 @@ class ClassesController extends Controller
             }
         ])->where('class_id', $class_id)->get();
 
-        $mealsClass = Meals::where('class_id', $class_id)->whereDay('days', $day)->get();
+        $mealsClass = Meals::where('class_id', $class_id)->where('days', $day)->get();
         $kids = $kids->map(function ($kid) use ($date, $mealsClass) {
             $absence = $kid->absent;
             return [
