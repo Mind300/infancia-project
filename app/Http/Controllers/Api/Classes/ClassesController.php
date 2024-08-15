@@ -9,6 +9,7 @@ use App\Http\Requests\Classes\CreateClasses;
 use App\Models\Absence;
 use App\Models\Classes;
 use App\Models\Kids;
+use App\Models\Meals;
 use Carbon\Carbon;
 
 class ClassesController extends Controller
@@ -97,7 +98,7 @@ class ClassesController extends Controller
             },
             'meal_amount' => function ($query) use ($date, $day) {
                 $query->whereDate('created_at', $date)
-                    ->whereHas('meal', function ($query) use ($day) {
+                    ->with('meal', function ($query) use ($day) {
                         $query->where('days', $day);
                     });
             },
@@ -106,19 +107,24 @@ class ClassesController extends Controller
             }
         ])->where('class_id', $class_id)->get();
 
-        $kids = $kids->map(function ($kid) use ($date) {
-            $absence = $kid->absent->whereDate('created_at', $date)->first() ?? null;
-
+        $mealsClass = Meals::where('class_id', $class_id)->get();
+        $kids = $kids->map(function ($kid) use ($date, $mealsClass) {
+            $absence = $kid->absent;
             return [
                 'id' => $kid->id,
                 'kid_name' => $kid->kid_name,
-                'absent' => $absence->absent ?? 0,
+                'absent' => $absence?->whereDate('created_at', $date) ? $absence->absent : 0,
                 'meal_Amount' => $kid->meal_amount,
                 'activites' => $kid->activites,
             ];
         });
 
-        return contentResponse($kids, fetchAll('Class Activity'));
+        $data = [
+            'kid' => $kids,
+            'meal_class' => $mealsClass,
+        ];
+
+        return contentResponse($data, fetchAll('Class Activity'));
     }
 
     public function absent(AbsentRequest $request)
