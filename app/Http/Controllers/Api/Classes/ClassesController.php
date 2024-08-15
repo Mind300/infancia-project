@@ -107,7 +107,7 @@ class ClassesController extends Controller
         ])->where('class_id', $class_id)->get();
 
         $kids = $kids->map(function ($kid) use ($date) {
-            $absence = $kid->absent->whereDate('created_at', $date)->first();
+            $absence = $kid->absent->whereDate('created_at', $date)->first() ?? null;
 
             return [
                 'id' => $kid->id,
