@@ -23,7 +23,7 @@ class ScheduleRequest extends FormRequest
     {
         return [
             'content' => 'required|string',
-            'days' => 'required|string|in:SAT,SUN,MON,TUE,WED,THU,FRI',
+            'days' => 'required|string|in:Sat,Sun,Mon,Tue,Wed,Thu,Fri',
             'class_id' => 'required|integer|exists:classes,id',
             'subject_id' => 'required|integer|exists:subjects,id',
         ];
