@@ -82,9 +82,12 @@ class FollowUpController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $kid_id, string $day, string $date = null)
+    public function show(string $kid_id, string $date)
     {
-        $activites = Activites::with('kid')->where('kid_id', $kid_id)->first();
+        $date = Carbon::parse($date);
+        $day = $date->shortDayName; // Gets the short name of the day (e.g., "Mon" for Monday)
+
+        $activites = Activites::with('kid')->where('kid_id', $kid_id)->whereDate('created_at', $date)->first();
         if (!$activites) {
             $activites = Kids::find($kid_id);
         }
