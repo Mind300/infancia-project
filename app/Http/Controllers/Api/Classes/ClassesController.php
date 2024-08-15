@@ -98,7 +98,7 @@ class ClassesController extends Controller
             },
             'meal_amount' => function ($query) use ($date, $day) {
                 $query->whereDate('created_at', $date)
-                    ->with('meal', function ($query) use ($day) {
+                    ->whereHas('meal', function ($query) use ($day) {
                         $query->where('days', $day);
                     });
             },
@@ -108,6 +108,7 @@ class ClassesController extends Controller
         ])->where('class_id', $class_id)->get();
 
         $mealsClass = Meals::where('class_id', $class_id)->where('days', $day)->get();
+
         $kids = $kids->map(function ($kid) use ($date, $mealsClass) {
             $absence = $kid->absent;
             return [
@@ -130,10 +131,8 @@ class ClassesController extends Controller
     public function absent(AbsentRequest $request)
     {
         $date = Carbon::today()->format('Y-m-d');
-
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
-
         $absent = Absence::where('kid_id', $requestValidated['kid_id'])->whereDate('created_at', $date)->first();
 
         if ($absent) {
