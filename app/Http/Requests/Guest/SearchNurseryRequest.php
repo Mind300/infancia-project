@@ -22,9 +22,9 @@ class SearchNurseryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'country' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
+            'city' => 'nullable|string',
+            'country' => 'nullable|string',
+            'province' => 'nullable|string',
         ];
     }
 }

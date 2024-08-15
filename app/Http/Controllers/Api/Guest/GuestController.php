@@ -14,6 +14,8 @@ class GuestController extends Controller
 
         $nurseryFind = $nurseryFind->map(function($nursery){
             return [
+                'id' => $nursery->id,
+                'name' => $nursery->name,
                 'country' => $nursery->user->country,
                 'city' => $nursery->user->city,
                 'province' => $nursery->province,

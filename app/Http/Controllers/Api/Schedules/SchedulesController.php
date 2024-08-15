@@ -54,24 +54,16 @@ class SchedulesController extends Controller
      */
     public function show(string $class_id)
     {
-        // Fetch the class with its schedules and subjects
-        $class = Classes::with(['schedules', 'subjects'])->find($class_id);
-        
-        // Extract subject IDs from schedules
-        $scheduleSubjectIds = $class->schedules->pluck('subject_id')->unique();
-    
-        // Filter subjects to remove those with IDs found in the schedules
-        $filteredSubjects = $class->subjects->filter(function ($subject) use ($scheduleSubjectIds) {
-            return !$scheduleSubjectIds->contains($subject->subject_id);
+        $class = Classes::find($class_id);
+        $class_schedule = $class->subjects->map(function($subject) use ($class){
+            return 
+            [
+                'subject' => $subject,
+                'content' => $class->schedule->where('subject_id', $subject->id)
+            ];
         });
-    
-        // Convert the filtered subjects to an array
-        $class->subjects = $filteredSubjects->values();
-    
-        // Return the response
-        return contentResponse($class, fetchOne('Schedule'));
+        return contentResponse($class_schedule, fetchOne('Schedule'));
     }
-        
 
     /**
      * Show the form for editing the specified resource.
