@@ -93,8 +93,8 @@ class ClassesController extends Controller
         $day = $date->shortDayName; // Gets the short name of the day (e.g., "Mon" for Monday)
 
         $kids = Kids::select('id', 'kid_name')->with([
-            'absent' => function ($query) {
-                $query->select('kid_id', 'absent', 'created_at'); // Make sure to include created_at if you need to filter by it later
+            'absent' => function ($query) use ($date){
+                $query->select('kid_id', 'absent', 'created_at')->whereDate('created_at', $date); // Make sure to include created_at if you need to filter by it later
             },
             'meal_amount' => function ($query) use ($date, $day) {
                 $query->whereDate('created_at', $date)
