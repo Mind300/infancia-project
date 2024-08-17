@@ -25,7 +25,7 @@ class SchedulesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index() 
+    public function index()
     {
         $schedule = Schedule::where('nursery_id', $this->nursery_id)->get();
         return contentResponse($schedule, fetchAll('Schedules'));
@@ -52,15 +52,15 @@ class SchedulesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $class_id)
+    public function show(string $class_id, string $day)
     {
         $class = Classes::find($class_id);
-        $class_schedule = $class->subjects->map(function($subject) use ($class){
-            return 
-            [
-                'subject' => $subject->subjects,
-                'subject_content' => $class?->schedules?->where('subject_id', $subject->subject_id)->first()
-            ];
+        $class_schedule = $class->subjects->map(function ($subject) use ($class, $day) {
+            return
+                [
+                    'subject' => $subject->subjects,
+                    'subject_content' => $class?->schedules?->where('days', $day)->where('subject_id', $subject->subject_id)->first()
+                ];
         });
         return contentResponse($class_schedule, fetchOne('Schedule'));
     }

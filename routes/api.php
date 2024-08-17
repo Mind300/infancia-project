@@ -54,6 +54,7 @@ Route::apiResource('/reviews', 'Nurseries\ReviewsController');
 // Faq Resource
 Route::apiResource('/faq', 'Nurseries\FaqController');
 Route::apiResource('/schedules', 'Schedules\SchedulesController');
+Route::get('/schedules/{class_id}/{day}', 'Schedules\SchedulesController@show');
 
 // Roles
 Route::apiResource('roles', 'Roles\RoleController');
