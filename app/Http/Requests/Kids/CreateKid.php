@@ -23,6 +23,7 @@ class CreateKid extends FormRequest
     {
         return [
             // Users
+            'media' => 'sometimes|image',
             'name' =>  'required|string',
             'email' =>  'required|email:filter|unique:users,email',
             'phone' =>  'required|string|unique:users,phone',

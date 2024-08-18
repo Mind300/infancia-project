@@ -37,8 +37,16 @@ class KidsController extends Controller
     public function index()
     {
         $kids = Kids::where('nursery_id', $this->nursery_id)->get();
-        return contentResponse($kids, fetchAll('Kids'));
+        $kidsWithMedia = $kids->map(function ($kid) {
+            $kid->getFirstMedia('Kids');
+            return [
+                'kid' => $kid,
+            ];
+        });
+    
+        return contentResponse($kidsWithMedia, fetchAll('Kids'));
     }
+    
 
     /**
      * Store a newly created resource in storage.
@@ -62,7 +70,11 @@ class KidsController extends Controller
             $parents = Parents::create($requestValidated);
 
             $requestValidated['parent_id'] = $parents->id;
-            Kids::create($requestValidated);
+            $kid = Kids::create($requestValidated);
+
+            if ($request->has('media')) {
+                $kid->addMediaFromRequest('media')->toMediaCollection('Kids');
+            }
 
             // Increment Kid Count
             $class = Classes::find($request->class_id);
@@ -88,18 +100,20 @@ class KidsController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Kids $kid)
+    public function show(string $id)
     {
-        $kid->parent->user;
+        $kid = Kids::with('parent.user')->find($id);
+        $kid->getFirstMedia('Kids');
         return contentResponse($kid, fetchOne($kid->kid_name));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Kids $kid)
+    public function edit(string $id)
     {
-        $kid->parent->user;
+        $kid = Kids::with('parent.user')->find($id);
+        $kid->getFirstMedia('Kids');
         return contentResponse($kid, fetchOne($kid->kid_name));
     }
 

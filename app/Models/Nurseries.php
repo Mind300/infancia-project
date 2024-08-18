@@ -44,7 +44,7 @@ class Nurseries extends Model implements HasMedia
     {
         return $this->hasMany(Kids::class, 'nursery_id');
     }
-    
+
     // Spatie Media Library Collections
     public function registerMediaCollections(): void
     {
