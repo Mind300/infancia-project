@@ -28,7 +28,6 @@ class SchedulesController extends Controller
     public function index()
     {
         $schedule = Schedule::where('nursery_id', $this->nursery_id)->get();
-        $schedule->getFirstMedia('Schedules');
         return contentResponse($schedule, fetchAll('Schedules'));
     }
 
@@ -42,7 +41,6 @@ class SchedulesController extends Controller
             $requestValidated = $request->validated();
             $requestValidated['nursery_id'] = $this->nursery_id;
             $schedule = Schedule::create($requestValidated);
-            $schedule->addMediaFromRequest('media')->toMediaCollection('Schedules');
             DB::commit();
             return messageResponse('Added Schedule Successfully');
         } catch (\Throwable $error) {
@@ -57,15 +55,13 @@ class SchedulesController extends Controller
     public function show(string $class_id, string $day)
     {
         $class = Classes::find($class_id);
-        $schedules = Schedule::where('class_id', $class->id)->get();
-        $class_schedule = $class->subjects->map(function ($subject) use ($class,$schedules, $day) {
+        $class_schedule = $class->subjects->map(function ($subject) use ($class, $day) {
             return
                 [
                     'subject' => $subject->subjects,
-                    'subject_content' => $class?->schedules?->where('days', $day)->where('subject_id', $subject->subject_id)->first(),
+                    'subject_content' => $class?->schedules?->where('days', $day)->where('subject_id', $subject->subject_id)->first()
                 ];
         });
-        $class_schedule;
         return contentResponse($class_schedule, fetchOne('Schedule'));
     }
 

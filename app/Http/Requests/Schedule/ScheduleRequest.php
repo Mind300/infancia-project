@@ -22,7 +22,6 @@ class ScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'media' => 'required|image',
             'content' => 'required|string',
             'days' => 'required|string|in:Sat,Sun,Mon,Tue,Wed,Thu,Fri',
             'class_id' => 'required|integer|exists:classes,id',
