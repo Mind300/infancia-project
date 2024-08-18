@@ -57,14 +57,15 @@ class SchedulesController extends Controller
     public function show(string $class_id, string $day)
     {
         $class = Classes::find($class_id);
-        $class_schedule = $class->subjects->map(function ($subject) use ($class, $day) {
+        $schedules = Schedule::where('class_id', $class->id)->get();
+        $class_schedule = $class->subjects->map(function ($subject) use ($class,$schedules, $day) {
             return
                 [
                     'subject' => $subject->subjects,
                     'subject_content' => $class?->schedules?->where('days', $day)->where('subject_id', $subject->subject_id)->first(),
-                    'media' => $class?->schedules->getFirstMedia('Schedules'),
                 ];
         });
+        $class_schedule;
         return contentResponse($class_schedule, fetchOne('Schedule'));
     }
 
