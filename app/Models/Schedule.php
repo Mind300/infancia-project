@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Schedule extends Model
+class Schedule extends Model implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -37,5 +39,11 @@ class Schedule extends Model
     public function subject()
     {
         return $this->hasMany(Subjects::class, 'subject_id');
+    }
+
+    // Spatie Media Library Collections
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('Schedules')->singleFile();
     }
 }
