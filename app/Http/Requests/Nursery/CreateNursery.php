@@ -22,6 +22,7 @@ class CreateNursery extends FormRequest
     public function rules(): array
     {
         return [
+            'media' => 'required|image',
             'email' => 'required|email:filter|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
             'password' => 'required|string',

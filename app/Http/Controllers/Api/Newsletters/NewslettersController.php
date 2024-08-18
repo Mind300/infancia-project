@@ -36,6 +36,7 @@ class NewslettersController extends Controller
             'description' => $newsletter->description,
             'likes_counts' => $newsletter->likes_counts,
             'liked' => $newsletter->newslikes->where('user_id', $this->user_id)->where('newsletter_id', $newsletter->id)->first() ? 1 : 0,
+            'media' => $newsletter->getFirstMedia('Newsletters'),
             'created_at' => $newsletter->created_at,
         ];
         return $data;
@@ -63,6 +64,7 @@ class NewslettersController extends Controller
         $requestValidated['title'] = auth()->user()->name;
         try {
             $newsletter = NewsLetters::create($requestValidated);
+            $newsletter->addMediaFromRequest('media')->toMediaCollection('Newsletters');
             DB::commit();
             return contentResponse($newsletter, 'Newsletter Created Successfully');
         } catch (\Throwable $error) {
@@ -74,7 +76,7 @@ class NewslettersController extends Controller
     /**
      * Display the specified newsletter.
      */
-    public function show($id)
+    public function show(string $id)
     {
         $newsletter = NewsLetters::find($id);
         $data = $this->data($newsletter);

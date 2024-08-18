@@ -22,6 +22,7 @@ class NewslettersRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'media' => 'required|image',
             'description' => 'required|string'
         ];
     }

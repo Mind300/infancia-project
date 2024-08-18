@@ -8,6 +8,7 @@ use App\Models\Nurseries;
 use App\Models\Nursery;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
@@ -37,22 +38,28 @@ class NurseriesController extends Controller
      */
     public function store(CreateNursery $request)
     {
+        DB::beginTransaction();
+
         try {
             $user = User::create($request->safe()->only(['name', 'email', 'phone', 'password']));
             $nurseryData = $request->safe()->except(['email', 'phone', 'password']);
 
             $nurseryData['user_id'] = $user->id;
             $nursery = Nurseries::create($nurseryData);
+            $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
 
             $team = Team::create(['name' => $user->name . 'Team']);
-            $role = Role::where('name', 'nursery')->first();
+            $role = Role::where('name', 'nursery_Owner')->first();
+
 
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
 
+            DB::commit();
             return messageResponse('Success, Nursery Created Successfully');
-        } catch (\Throwable $th) {
-            dd($th);
+        } catch (\Throwable $error) {
+            DB::rollBack();
+            return messageResponse($error->getMessage(), 403);
         }
     }
 
@@ -61,7 +68,9 @@ class NurseriesController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $nursery = Nurseries::find($id);
+        $nursery->getFirstMedia('Nurseries');
+        return contentResponse($nursery, 'content');
     }
 
     /**

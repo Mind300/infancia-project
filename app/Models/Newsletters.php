@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Newsletters extends Model
+class Newsletters extends Model implements HasMedia
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -31,5 +33,11 @@ class Newsletters extends Model
     public function nursery()
     {
         return $this->belongsTo(Nurseries::class, 'nursery_id');
+    }
+
+    // Spatie Media Library Collections
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('Newsletters')->singleFile();
     }
 }
