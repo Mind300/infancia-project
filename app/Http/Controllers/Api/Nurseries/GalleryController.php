@@ -77,11 +77,11 @@ class GalleryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(AlbumUpdateRequest $request, Album $album)
+    public function update(AlbumUpdateRequest $request, string $album_id)
     {
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
-        $album->update($requestValidated);
+        $album = Album::findOrFail($album_id)->update($requestValidated);
         return messageResponse('Album Updating Successfully');
     }
 
@@ -92,6 +92,7 @@ class GalleryController extends Controller
     {
         $album = Album::find($id);
         $album->clearMediaCollection($album->title);
+        $album->forceDelete();
         return messageResponse('Album Deleted Successfully');
     }
 }

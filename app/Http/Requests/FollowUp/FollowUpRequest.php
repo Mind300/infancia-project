@@ -30,7 +30,7 @@ class FollowUpRequest extends FormRequest
 
             'mood' => 'sometimes|integer', 
             'napping' => 'sometimes',
-            'comment' => 'sometimes|string',
+            'comment' => 'nullable|string',
             'diaper' => 'nullable|integer',
             'potty' => 'nullable|integer',
             'toilet' => 'nullable|integer',

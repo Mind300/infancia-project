@@ -23,7 +23,7 @@ class SubjectRequest extends FormRequest
     public function rules(): array
     {
         $nursery_id = auth()->user()->nursery->id;
-        $rules = [
+        return [
             'title' => [
                 'required',
                 'string',
@@ -32,7 +32,17 @@ class SubjectRequest extends FormRequest
                     ->ignore($this->route('subject'))
             ],
         ];
+    }
 
-        return $rules;
+    /**
+     * Get the custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'title.unique' => 'The subject name is already taken in this nursery. Please choose a different name.',
+        ];
     }
 }

@@ -44,7 +44,7 @@ class MealsController extends Controller
         
         // Process meal amounts
         foreach ($requestValidated['meals'] as $meal) {
-            $existingMeal = $meals->firstWhere('days', $meal['days']);
+            $existingMeal = $meals->where('days', $meal['days'])->where('type', $meal['type'])->first();
             if ($existingMeal) {
                 $existingMeal->update($meal);
             } else {

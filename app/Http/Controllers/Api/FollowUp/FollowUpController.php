@@ -88,11 +88,14 @@ class FollowUpController extends Controller
         $day = $date->shortDayName; // Gets the short name of the day (e.g., "Mon" for Monday)
 
         $activites = Activites::with('kid')->where('kid_id', $kid_id)->whereDate('created_at', $date)->first();
+        
         if (!$activites) {
             $activites = Kids::find($kid_id);
         }
 
-        $meals = Meals::with('amount')->where('class_id', $activites->kid->class_id ?? $activites->class_id)->where('days', $day)->get();
+        $meals = Meals::with(['amount'=>function($query) use ($kid_id){
+            $query->where('kid_id', $kid_id);
+        }])->where('class_id', $activites->kid->class_id ?? $activites->class_id)->where('days', $day)->get();
 
         $data = [
             'kid_id' => $activites->kid->id ?? $activites->id,

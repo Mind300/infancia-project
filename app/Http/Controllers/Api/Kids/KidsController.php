@@ -43,10 +43,10 @@ class KidsController extends Controller
                 'kid' => $kid,
             ];
         });
-    
+
         return contentResponse($kidsWithMedia, fetchAll('Kids'));
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -148,10 +148,16 @@ class KidsController extends Controller
      */
     public function destroy(Kids $kid)
     {
+        DB::beginTransaction();
         try {
+            $class = Classes::find($kid->class_id);
+            $class->increment('kids_count');
+
             $kid->forceDelete();
+            DB::commit();
             return messageResponse('Deleted Kid Successfully');
         } catch (\Throwable $error) {
+            DB::rollBack();
             return messageResponse($error->getMessage(), 403);
         }
     }
