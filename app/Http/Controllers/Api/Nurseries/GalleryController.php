@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nurseries\AlbumRequest;
+use App\Http\Requests\Nurseries\AlbumUpdateRequest;
 use App\Http\Requests\Nursery\GalleryRequest;
 use App\Models\Album;
-use App\Models\Nurseries;
-use Illuminate\Http\Request;
 
 class GalleryController extends Controller
 {
@@ -38,7 +37,7 @@ class GalleryController extends Controller
     {
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
-        
+
         $album = Album::create($requestValidated);
         return messageResponse('Album Adding Successfully');
     }
@@ -67,7 +66,8 @@ class GalleryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $album_id) {
+    public function edit(string $album_id)
+    {
         $album = Album::findOrFail($album_id);
         $mediaItems = $album->getMedia($album->title);
         $mediaArray = $mediaItems->values()->toArray();
@@ -77,7 +77,7 @@ class GalleryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(GalleryRequest $request, Album $album)
+    public function update(AlbumUpdateRequest $request, Album $album)
     {
         $requestValidated = $request->validated();
         $requestValidated['nursery_id'] = $this->nursery_id;
@@ -88,9 +88,10 @@ class GalleryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Album $album)
+    public function destroy(string $id)
     {
+        $album = Album::find($id);
         $album->clearMediaCollection($album->title);
-        $album->forceDelete();
+        return messageResponse('Album Deleted Successfully');
     }
 }

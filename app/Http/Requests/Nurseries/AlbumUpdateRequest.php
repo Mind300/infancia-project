@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Nursery;
+namespace App\Http\Requests\Nurseries;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class GalleryRequest extends FormRequest
+class AlbumUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,7 @@ class GalleryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'album_id' => 'sometimes|integer',
-            'media' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
-            // 'media.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'title' => 'required|string'
         ];
     }
 }
