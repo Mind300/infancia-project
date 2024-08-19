@@ -4,17 +4,27 @@ namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nursery\CreateNursery;
+use App\Http\Requests\Nursery\GalleryRequest;
 use App\Models\Nurseries;
-use App\Models\Nursery;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
 
 class NurseriesController extends Controller
 {
+    // Variables
+    private $nursery_id;
+
+    /**
+     * Construct a instance of the resource.
+     */
+    public function __construct()
+    {
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id;
+    }
+
     /**
      * Display a listing of the resource.
      */

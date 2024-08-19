@@ -130,6 +130,7 @@ class KidsController extends Controller
             $user = User::find($parent->user_id);
 
             $kid->update($request->validated());
+            $kid->addMediaFromRequest($request->media)->toMediaCollection('Kids');
             $parent->update($request->validated());
             $user->update($request->validated());
 

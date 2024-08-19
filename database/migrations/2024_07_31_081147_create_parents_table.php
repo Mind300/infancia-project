@@ -20,8 +20,8 @@ return new class extends Migration
 			$table->string('mother_mobile')->nullable();
 			$table->string('mother_job')->nullable();
 			$table->string('emergency_phone')->nullable();
-            $table->foreignId('nursery_id')->constrained('nurseries');
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('nursery_id')->constrained('nurseries')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
 			$table->timestamps();
         });
     }

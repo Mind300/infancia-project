@@ -49,6 +49,9 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
+Route::apiResource('nurseries/album', 'Nurseries\GalleryController');
+Route::post('nurseries/add-photo', 'Nurseries\GalleryController@addPhotos');
+
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
 // Faq Resource
@@ -69,6 +72,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Kids Resource
     Route::apiResource('kids', 'Kids\KidsController');
+    Route::post('kids/{kid_id}', 'Kids\KidsController@update')->name('users.update');
     Route::get('birthday/{accessMonth}', 'Kids\KidsController@birthdayKids');
 
     // Subjects Resource

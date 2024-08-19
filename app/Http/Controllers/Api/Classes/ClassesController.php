@@ -51,10 +51,38 @@ class ClassesController extends Controller
      */
     public function show(string $id)
     {
-        $classes = Classes::with('kids')->where('nursery_id', $this->nursery_id)->find($id);
-        return contentResponse($classes, fetchOne($classes->name));
+        // Fetch the class along with its kids
+        $class = Classes::with('kids')->where('nursery_id', $this->nursery_id)->findOrFail($id);
+    
+        // Iterate over each kid to load their media
+        foreach ($class->kids as $kid) {
+            $kid->media = $kid->getMedia(); // Assuming the default collection, or specify the collection name
+        }
+    
+        // Prepare the response with the class and kids including their media
+        return contentResponse($class, fetchOne($class->name));
     }
+    
 
+    /*
+        public function show(string $id)
+    {
+        $class = Classes::where('nursery_id', $this->nursery_id)->findOrFail($id);
+        $kids = Kids::where('class_id', $class->id)->get();
+    
+        foreach ($kids as $kid) {
+            $kid->media = $kid->getMedia();
+        }
+    
+        $data = [
+            'class' => $class,
+            'kids' => $kids,
+        ];
+    
+        return contentResponse($data, fetchOne($class->name));
+    }
+    
+    */
     /**
      * Show the form for editing the specified class.
      */
