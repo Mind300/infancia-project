@@ -75,7 +75,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Kids Resource
     Route::apiResource('kids', 'Kids\KidsController');
-    Route::post('kids/{kid_id}', 'Kids\KidsController@update')->name('users.update');
+    Route::post('kids/{kid}', 'Kids\KidsController@update')->name('kids.update');
     Route::get('birthday/{accessMonth}', 'Kids\KidsController@birthdayKids');
 
     // Subjects Resource

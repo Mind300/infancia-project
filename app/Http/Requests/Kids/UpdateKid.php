@@ -35,6 +35,7 @@ class UpdateKid extends FormRequest
             'address' =>  'required|string',
 
             // Kids
+            'media' => 'required|image',
             'kid_name' =>  'required|string',
             'gender' =>  'required|string',
             'birthdate' =>  'required|string',
