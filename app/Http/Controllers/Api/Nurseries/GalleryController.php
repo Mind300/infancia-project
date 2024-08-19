@@ -32,14 +32,6 @@ class GalleryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(AlbumRequest $request)
@@ -75,21 +67,30 @@ class GalleryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id) {}
+    public function edit(string $album_id) {
+        $album = Album::findOrFail($album_id);
+        $mediaItems = $album->getMedia($album->title);
+        $mediaArray = $mediaItems->values()->toArray();
+        return contentResponse($mediaArray, fetchAll('Albums Name'));
+    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(GalleryRequest $request, Album $album)
     {
-        //
+        $requestValidated = $request->validated();
+        $requestValidated['nursery_id'] = $this->nursery_id;
+        $album->update($requestValidated);
+        return messageResponse('Album Updating Successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Album $album)
     {
-        //
+        $album->clearMediaCollection($album->title);
+        $album->forceDelete();
     }
 }

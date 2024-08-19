@@ -24,6 +24,7 @@ class MelasRequest extends FormRequest
         return [
             'meals' => 'sometimes|array',
             'meals.*.days' => 'sometimes|string',
+            'meals.*.type' => 'sometimes|string',
             'meals.*.description' => 'sometimes|string',
             'meals.*.class_id' => 'required|integer',
             'class_id' => 'required|integer',
