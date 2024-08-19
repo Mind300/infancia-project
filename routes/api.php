@@ -49,8 +49,8 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
-Route::apiResource('nurseries/album', 'Nurseries\GalleryController');
-Route::post('nurseries/add-photo', 'Nurseries\GalleryController@addPhotos');
+Route::apiResource('nursery-album', 'Nurseries\GalleryController');
+Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
 
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');

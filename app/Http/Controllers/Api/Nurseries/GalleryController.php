@@ -56,8 +56,8 @@ class GalleryController extends Controller
      */
     public function addPhotos(GalleryRequest $request)
     {
-        $album = Album::findOrFail($request->safe()->only(['album_id']));
-        $album->addMediaFromRequest($request->media)->toMediaCollection($album->title);
+        $album = Album::findOrFail($request->validated('album_id'));
+        $album->addMediaFromRequest('media')->toMediaCollection($album->title);
         return messageResponse('Photos Added in ' . $album->title . ' Successfully');
     }
 
