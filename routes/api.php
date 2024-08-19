@@ -51,6 +51,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
 Route::apiResource('nursery-album', 'Nurseries\GalleryController');
 Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
+Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\GalleryController@deletePhoto');
 
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');

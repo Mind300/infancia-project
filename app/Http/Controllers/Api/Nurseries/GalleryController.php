@@ -90,9 +90,23 @@ class GalleryController extends Controller
      */
     public function destroy(string $id)
     {
-        $album = Album::find($id);
+        $album = Album::findOrFail($id);
         $album->clearMediaCollection($album->title);
         $album->forceDelete();
         return messageResponse('Album Deleted Successfully');
+    }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function deletePhoto(string $album_id, string $media_id)
+    {
+        $album = Album::findOrFail($album_id);
+        $mediaItem = $album->getMedia($album->title)->where('id', $media_id)->first();
+        if ($mediaItem) {
+            $mediaItem->delete(); // Delete the specific media item
+            return messageResponse('Photo Deleted Successfully');
+        } else {
+            return messageResponse('Photo Not Found', 404);
+        }
     }
 }

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->bigInteger('employees_number')->default('0');
             $table->longText('about')->nullable();
             $table->decimal('start_fees')->nullable();
+            $table->longText('services')->nullable();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
