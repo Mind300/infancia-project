@@ -104,8 +104,6 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Parent Request Resource
     Route::apiResource('/parent', 'Parent\ParentController');
-
-    
 });
 
 Route::get('/sendmail', 'Test\TestController@sendmail');

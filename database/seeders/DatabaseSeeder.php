@@ -8,6 +8,7 @@ use App\Models\Nurseries;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
 
@@ -17,8 +18,31 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(LaratrustSeeder::class);
 
-        // Create admin User and assign the role to him.
+        // Create the permissions
+        $permissions = [
+            'Nursery-Profile',
+            'Manage-Classes',
+            'Meal',
+            'NewsLetter',
+            'Parent-Request',
+            'Payment-History',
+            'Payment-Request',
+            'Nursery-Policy',
+            'Roles',
+            'Faq',
+        ];
+
         
+   
+        foreach ($permissions as $permission) {
+            $permissions[] = \Laratrust\Models\Permission::firstOrCreate([
+                'name' => $permission,
+                'display_name' => ucfirst($permission),
+                'description' => ucfirst($permission),
+            ])->id;
+        }
+        // Create admin User and assign the role to him.
+
         // $user = User::create([
         //     'name' => 'Khaled Moussa',
         //     'email' => 'khaledmoussa202@gmail.com',
