@@ -37,7 +37,7 @@ class PolicyController extends Controller
         $requestValidated['nursery_id'] = $this->nursery_id;
 
         $policy = Policy::create($requestValidated);
-        return contentResponse($policy, 'Policy created successfully');
+        return contentResponse($policy, 'Policy created successfully');   
     }
 
     /**
