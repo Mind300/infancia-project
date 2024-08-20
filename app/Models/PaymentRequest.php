@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class PaymentRequest extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = [
         'amount',
         'service',
@@ -23,8 +23,8 @@ class PaymentRequest extends Model
         return $this->hasMany(Nurseries::class, 'nursery_id');
     }
 
-    public function kid()
+    public function kids()
     {
-        return $this->hasMany(Kids::class, 'kid_id');
+        return $this->belongsTo(Kids::class, 'kid_id');
     }
 }

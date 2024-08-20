@@ -60,7 +60,7 @@ class Kids extends Model implements HasMedia
     
     public function payment()
     {
-        return $this->belongsTo(Payment::class, 'kid_id');
+        return $this->belongsTo(PaymentRequest::class, 'kid_id');
     }
 
     // Spatie Media Library Collections

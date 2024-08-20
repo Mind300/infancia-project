@@ -17,8 +17,8 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->boolean('is_paid')->default(false);
             $table->dateTime('paid_at')->nullable(); 
-            $table->foreignId('kid_id')->constrained();
-            $table->foreignId('nursery_id')->constrained();
+            $table->foreignId('kid_id')->constrained('kids');
+            $table->foreignId('nursery_id')->constrained('nurseries');
             $table->timestamps();
         });
     }

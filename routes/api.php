@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
     // Payment Request
     Route::apiResource('payment-request', 'PaymentRequest\PaymentRequestController');
+    Route::post('payment-request/paid/{payment_req_id}', 'PaymentRequest\PaymentRequestController@makrPaied');
 
     // Parent Request Resource
     Route::apiResource('/parent', 'Parent\ParentController');

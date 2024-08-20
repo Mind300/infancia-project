@@ -27,16 +27,8 @@ class PaymentRequestController extends Controller
      */
     public function index()
     {
-        $paymentRequest = PaymentRequest::where('nursery_id', $this->nursery_id)->get();
+        $paymentRequest = PaymentRequest::with('kids')->where('nursery_id', $this->nursery_id)->get();
         return contentResponse($paymentRequest, fetchAll('All Payment Request'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -53,7 +45,6 @@ class PaymentRequestController extends Controller
             $paymentRequest = PaymentRequest::create([
                 'service' => $requestValidated['service'],
                 'amount' => $requestValidated['amount'],
-                'paid_at' => $requestValidated['paid_at'],
                 'kid_id' => $meal['kid_id'],
                 'nursery_id' => $requestValidated['nursery_id'],
             ]);
@@ -67,21 +58,21 @@ class PaymentRequestController extends Controller
     public function show(string $id)
     {
         $paymentRequest = PaymentRequest::findOrFail($id);
-
-        if ($paymentRequest->is_paid) {
-            return messageResponse('This payment has already been marked as paid');
-        }
-        $paymentRequest->update(['is_paid' => true, 'paid_at' => now()]);
-
         return contentResponse($paymentRequest, fetchAll('All Payment Request'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function makrPaied(string $id)
     {
-        //
+        $paymentRequest = PaymentRequest::findOrFail($id);
+        if ($paymentRequest->is_paid) {
+            return messageResponse('This payment has already been marked as paid');
+        }
+        $paymentRequest->update(['is_paid' => true, 'paid_at' => Carbon::today()]);
+        
+        return contentResponse($paymentRequest, fetchOne('Paied Successfully'));
     }
 
     /**
