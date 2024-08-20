@@ -13,6 +13,7 @@ class SchedulesController extends Controller
 {
     // Variables
     private $nursery_id;
+    private $class_id;
 
     /**
      * Construct a instance of the resource.

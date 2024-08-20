@@ -22,25 +22,24 @@ class ParentController extends Controller
     /**
      * Display a listing of the resource.
      */
- public function index()
-{
-    $parents = Parents::with('kids')->where('user_id', $this->user_id)->get();
-    
-    $parent = $parents->map(function ($parent) {
-        return $parent->kids->flatMap(function($kid) {
-            return [
-                'media' => '',
-                'nursery_id' => $kid->nursery->id,
-                'nursery_name' => $kid->nursery->name,
-                'kid_id' => $kid->id,
-                'kid_name' => $kid->kid_name,
+    public function index()
+    {
+        $parents = Parents::with('kids')->where('user_id', $this->user_id)->get();
+        $parent = $parents->flatMap(function ($parent) {
+            return $parent->kids->map(function ($kid) {
+                return [
+                    'nursery_id' => $kid->nursery->id,
+                    'nursery_name' => $kid->nursery->name,
+                    'kid_id' => $kid->id,
+                    'kid_name' => $kid->kid_name,
+                    'class_id' => $kid->class_id,
+                    'media' => $kid->getFirstMedia('Kids'),
                 ];
-            
+            });
         });
-    });
 
-    return contentResponse($parent, fetchAll('Parent Kids'));
-}
+        return contentResponse($parent, fetchAll('Parent Kids'));
+    }
 
     /**
      * Show the form for creating a new resource.

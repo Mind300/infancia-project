@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Subjects;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class SubjectClass extends FormRequest
 {
@@ -22,8 +23,15 @@ class SubjectClass extends FormRequest
     public function rules(): array
     {
         return [
-            'subject_id' => 'required|integer',
-            'class_id' => 'required|integer',
+            'subject_id' => ['required', 'integer'],
+            'class_id' => [
+                'required',
+                'integer',
+                Rule::unique('subjects_classes')->where(function ($query) {
+                    return $query->where('subject_id', $this->input('subject_id'))
+                                 ->where('class_id', $this->input('class_id'));
+                })
+            ],
         ];
     }
 }

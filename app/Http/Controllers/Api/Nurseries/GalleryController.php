@@ -24,9 +24,9 @@ class GalleryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $nursery_id)
     {
-        $albums = Album::where('nursery_id', $this->nursery_id)->get();
+        $albums = Album::where('nursery_id', $nursery_id)->get();
         return contentResponse($albums, fetchAll('Nursery Album'));
     }
 

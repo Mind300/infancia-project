@@ -50,6 +50,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
 Route::apiResource('nursery-album', 'Nurseries\GalleryController');
+Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
 Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
 Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\GalleryController@deletePhoto');
 
@@ -91,7 +92,6 @@ Route::group(['middleware' => ['auth:api']], function () {
     // Follow-Up Resource
     Route::apiResource('followup', 'FollowUp\FollowUpController');
     Route::get('followup/{kid_id}/{date}', 'FollowUp\FollowUpController@show');
-
 
     // Newletters Resource
     Route::apiResource('newsletters', 'Newsletters\NewslettersController');
