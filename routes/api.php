@@ -56,6 +56,7 @@ Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\Gal
 
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
+Route::get('/reviews-nursery/{nursery_id}', 'Nurseries\ReviewsController@index');
 // Faq Resource
 Route::apiResource('/faq', 'Nurseries\FaqController');
 Route::apiResource('/schedules', 'Schedules\SchedulesController');

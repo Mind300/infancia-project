@@ -21,9 +21,9 @@ class ReviewsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $nursery_id)
     {
-        $reviews = Reviews::with('user')->where('nursery_id', $this->nursery_id)->get();
+        $reviews = Reviews::with('user')->where('nursery_id', $nursery_id)->get();
         $reviews = $reviews->map(function($review){
             return [
                 'id' => $review->id,
