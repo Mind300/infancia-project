@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Reviews\ReviewsRequest;
+use App\Models\Nurseries;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class ReviewsController extends Controller
     public function index(string $nursery_id)
     {
         $reviews = Reviews::with('user')->where('nursery_id', $nursery_id)->get();
-        $reviews = $reviews->map(function($review){
+        $reviews = $reviews->map(function ($review) {
             return [
                 'id' => $review->id,
                 'review' => $review->review,
@@ -47,6 +48,13 @@ class ReviewsController extends Controller
             $requestValidated = $request->validated();
             $requestValidated['nursery_id'] = $this->nursery_id;
             $reviews = Reviews::create($requestValidated);
+
+            // Recalculate the average rating after the new review is added
+            $avgRate = Reviews::where('nursery_id', $this->nursery_id)
+                ->avg(DB::raw('rate / 10 * 5')); // Assuming 'rate' is out of 10
+
+            $nurseryRate = Nurseries::find($this->nursery_id)->update(['rateing' => $avgRate]);
+
             DB::commit();
             return messageResponse('Created Review Successfully');
         } catch (\Throwable $error) {
@@ -54,6 +62,7 @@ class ReviewsController extends Controller
             return messageResponse($error->getMessage(), 403);
         }
     }
+
 
     /**
      * Show the form for editing the specified resource.

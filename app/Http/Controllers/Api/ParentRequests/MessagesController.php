@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Api\ParentRequests;
 
 use App\Events\ChatSent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ParentRequest\MessageRequest;
 use App\Models\Message;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class MessagesController extends Controller
 {
@@ -23,7 +23,6 @@ class MessagesController extends Controller
         })->orderBy('created_at', 'asc')->get();
 
         return response()->json(['content' => $chats]);
-        // return contentResponse($chats, 'Fetch Chats Successfully');
     }
 
     //Send Message

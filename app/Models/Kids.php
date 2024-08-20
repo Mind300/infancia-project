@@ -57,6 +57,11 @@ class Kids extends Model implements HasMedia
     {
         return $this->hasMany(Activites::class, 'kid_id');
     }
+    
+    public function payment()
+    {
+        return $this->belongsTo(Payment::class, 'kid_id');
+    }
 
     // Spatie Media Library Collections
     public function registerMediaCollections(): void
