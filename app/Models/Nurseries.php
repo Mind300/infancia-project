@@ -27,6 +27,9 @@ class Nurseries extends Model implements HasMedia
         'kids_number',
         'employees_number',
         'about',
+        'start_fees',
+        'services',
+        'rateing',
         'user_id',
     ];
 

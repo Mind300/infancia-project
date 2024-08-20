@@ -27,7 +27,7 @@ class PaymentRequestController extends Controller
      */
     public function index()
     {
-        $paymentRequest = PaymentRequest::with('kids')->where('nursery_id', $this->nursery_id)->get();
+        $paymentRequest = PaymentRequest::with('kids.class')->where('nursery_id', $this->nursery_id)->get();
         return contentResponse($paymentRequest, fetchAll('All Payment Request'));
     }
 
