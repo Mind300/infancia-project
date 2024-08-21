@@ -49,7 +49,7 @@ class MessagesController extends Controller
 
     public function getChatRequest(string $nursery_id)
     {
-        $chats =  Chat::with('sender')->where('receiver', $nursery_id)->get();
+        $chats =  Chat::with('message')->with('sender')->where('receiver', $nursery_id)->get();
         return contentResponse($chats, 'Fetch Chats Request Successfully');
     }
 }

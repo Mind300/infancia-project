@@ -30,4 +30,8 @@ class Chat extends Model
     {
         return $this->belongsTo(User::class, 'receiver');
     }
+    public function message()
+    {
+        return $this->hasOne(Message::class, 'chat_id')->latest();
+    }
 }
