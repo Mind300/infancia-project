@@ -18,7 +18,7 @@ class Chat extends Model
         'sender',
         'receiver',
         'closed',
-        'close_date',
+        'closed_at',
     ];
 
     public function sender()

@@ -102,6 +102,7 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::get('/chat/{receiver}', 'ParentRequests\MessagesController@chatForm');
     Route::post('/chat/send-message', 'ParentRequests\MessagesController@sendMessage');
     Route::get('/chat/get-request/{nursery_id}', 'ParentRequests\MessagesController@getChatRequest');
+    Route::post('/chat/closed-chat/{chat_id}', 'ParentRequests\MessagesController@closedChat');
 
     // Payment Request
     Route::apiResource('payment-request', 'PaymentRequest\PaymentRequestController');

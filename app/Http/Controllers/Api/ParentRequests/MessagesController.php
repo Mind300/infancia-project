@@ -9,6 +9,7 @@ use App\Http\Requests\PaymentRequest\ChatsRequest;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
+use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
@@ -51,5 +52,12 @@ class MessagesController extends Controller
     {
         $chats =  Chat::with('message')->with('sender')->where('receiver', $nursery_id)->get();
         return contentResponse($chats, 'Fetch Chats Request Successfully');
+    }
+
+    public function closedChat(string $id)
+    {
+        $chat = Chat::find($id);
+        $chat->update(['closed' => 1, 'closed_at' => Carbon::today()]);
+        return messageResponse('Closed Chat Successfully');
     }
 }
