@@ -39,8 +39,11 @@ class RoleController extends Controller
      */
     public function store(CreateRole $request)
     {
-        // Get the team associated with the current user
-        $team = Team::where('name', auth()->user()->name . 'Team')->first();
+        // Get or create the team associated with the current user
+        $team = Team::firstOrCreate(
+            ['name' => auth()->user()->nursery->name . 'Team'], // The attributes to search for
+        );
+
         $roleData = $request->safe()->except('permissions');
         $roleData['team_id'] = $team->id;
 
@@ -52,6 +55,7 @@ class RoleController extends Controller
 
         return messageResponse('Created Role Successfully.');
     }
+
 
     /**
      * Display the specified resource.

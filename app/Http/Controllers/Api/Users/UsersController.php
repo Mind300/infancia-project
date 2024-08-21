@@ -42,7 +42,7 @@ class UsersController extends Controller
             $user = User::create($request->validated());
             // $user->addMediaFromRequest('image')->toMediaCollection('profiles');
 
-            $team = Team::where('name', auth()->user()->name . 'Team')->first();
+            $team = Team::where('name', auth()->user()->nursery->name . 'Team')->first();
             $role = Role::where('name', $request->safe()->only('role'))->where('team_id', $team->id)->first();
 
             $user->addRole($role, $team);
@@ -77,7 +77,6 @@ class UsersController extends Controller
     public function update(UpdateUser $request, string $id)
     {
         DB::beginTransaction();
-        
         try {
             $user = User::find($id);
             $user->update($request->validated());
