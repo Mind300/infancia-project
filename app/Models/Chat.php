@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Message extends Model
+class Chat extends Model
 {
     use HasFactory;
 
@@ -17,8 +17,8 @@ class Message extends Model
     protected $fillable = [
         'sender',
         'receiver',
-        'message',
-        'chat_id',
+        'closed',
+        'close_date',
     ];
 
     public function sender()

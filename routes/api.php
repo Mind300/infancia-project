@@ -99,10 +99,9 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::post('newsletters/likeOrUnlike', 'Newsletters\NewslettersController@likeOrUnlike');
 
     // Parent Request Resource
-    // Route::apiResource('/request', 'ParentRequests\RequestsController');
-    // Route::get('parent/request', 'ParentRequests\RequestsController@indexParent');
     Route::get('/chat/{receiver}', 'ParentRequests\MessagesController@chatForm');
     Route::post('/chat/send-message', 'ParentRequests\MessagesController@sendMessage');
+    Route::get('/chat/get-request/{nursery_id}', 'ParentRequests\MessagesController@getChatRequest');
 
     // Payment Request
     Route::apiResource('payment-request', 'PaymentRequest\PaymentRequestController');

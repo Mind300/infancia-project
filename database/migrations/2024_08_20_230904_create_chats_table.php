@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('messages', function (Blueprint $table) {
+        Schema::create('chats', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sender')->constrained('users')->onDelete('cascade');
             $table->foreignId('receiver')->constrained('users')->onDelete('cascade');
-            $table->longText('message')->nullable();
+            $table->integer('closed')->default(0);
+            $table->dateTime('closed_at')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('messages');
+        Schema::dropIfExists('chats');
     }
 };
