@@ -46,11 +46,23 @@ class AuthController extends Controller
         return contentResponse(auth()->user());
     }
 
-    // Get the authenticated User Role.
     public function authRole()
     {
-        return response()->json(auth()->user()->roles);
+        $user = auth()->user();
+        $rolesWithPermissions = $user->roles()->with('permissions:name')->get();
+        $rolesWithPermissions = $rolesWithPermissions->map(function ($role) {
+            return [
+                'id' => $role->id,
+                'role' => $role->name,
+                'display_name' => $role->display_name,
+                'description' => $role->description,
+                'permissions' => $role->permissions->pluck('name'), // Extract permission names
+            ];
+        });
+    
+        return response()->json($rolesWithPermissions);
     }
+    
 
     // Log the user out (Invalidate the token).
     public function logout()

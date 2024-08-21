@@ -41,26 +41,17 @@ class RoleController extends Controller
     {
         // Get the team associated with the current user
         $team = Team::where('name', auth()->user()->name . 'Team')->first();
-
-        // Extract the role data excluding permissions
         $roleData = $request->safe()->except('permissions');
         $roleData['team_id'] = $team->id;
 
-        // Create the role
         $role = Role::create($roleData);
-
-        // Get the list of permission names from the request
         $permissions = $request->safe()->only('permissions')['permissions'];
 
-        // Retrieve all permissions matching the given names
         $permissionObjects = Permission::whereIn('name', array_column($permissions, 'name'))->get();
-
-        // Assign the permissions to the role
         $role->permissions()->sync($permissionObjects->pluck('id'));
 
-        return contentResponse($role->load('permissions'), 'Success');
+        return messageResponse('Created Role Successfully.');
     }
-
 
     /**
      * Display the specified resource.
@@ -83,9 +74,18 @@ class RoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(CreateRole $request, string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->update($request->safe()->except('permissions'));
+
+        if ($request->has('permissions')) {
+            $permissions = $request->safe()->only('permissions')['permissions'];
+            $permissionObjects = Permission::whereIn('name', array_column($permissions, 'name'))->get();
+            $role->permissions()->sync($permissionObjects->pluck('id'));
+        }
+
+        return messageResponse('Updated Role Successfully.');
     }
 
     /**
@@ -93,6 +93,9 @@ class RoleController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $role = Role::findOrFail($id);
+        $role->permissions()->detach();
+        $role->delete();
+        return messageResponse('Deleted Role Successfully.');
     }
 }

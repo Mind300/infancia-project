@@ -9,6 +9,7 @@ use App\Http\Requests\Users\UpdateUser;
 use Illuminate\Http\Request;
 // Models
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
@@ -35,6 +36,8 @@ class UsersController extends Controller
     // Store a newly created resource in storage.
     public function store(CreateUser $request)
     {
+        DB::beginTransaction();
+
         try {
             $user = User::create($request->validated());
             // $user->addMediaFromRequest('image')->toMediaCollection('profiles');
@@ -47,11 +50,12 @@ class UsersController extends Controller
 
             // $showusers = Permission::where('name', 'show_users')->first();
             // $user->givePermission($showusers, $team);
+            DB::commit();
 
             return messageResponse('Success, User Created Successfully');
-        } catch (\Throwable $th) {
-            dd($th);
-            return messageResponse('Failed, An error occured when creating user..!!', 404);
+        } catch (\Throwable $error) {
+            DB::rollBack();
+            return messageResponse($error->getMessage(), 403);
         }
     }
 
@@ -72,14 +76,18 @@ class UsersController extends Controller
     // Update the specified resource in storage.
     public function update(UpdateUser $request, string $id)
     {
+        DB::beginTransaction();
+        
         try {
             $user = User::find($id);
             $user->update($request->validated());
             $user->assignRole($request->validated('role'));
             $user->addMediaFromRequest('image')->toMediaCollection('avatar');
+            DB::commit();
             return messageResponse('Success, User Updated Successfully');
-        } catch (\Throwable $th) {
-            return messageResponse('Failed, An Error Occured When Creating User..!!', 404);
+        } catch (\Throwable $error) {
+            DB::rollBack();
+            return messageResponse($error->getMessage(), 403);
         }
     }
 
