@@ -149,8 +149,8 @@ class KidsController extends Controller
     {
         DB::beginTransaction();
         try {
-            $class = Classes::find($kid->class_id);
-            $class->increment('kids_count');
+            $class = Classes::findOrFail($kid->class_id);
+            $class->decrement('kids_count');
 
             $kid->forceDelete();
             DB::commit();

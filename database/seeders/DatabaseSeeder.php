@@ -57,6 +57,12 @@ class DatabaseSeeder extends Seeder
             'password' => '24001091Km'
         ]);
 
+        $team = Team::create(['name' => $user->name . 'Team']);
+        $role = Role::where('name', 'superAdmin')->first();
+
+        $user->addRole($role, $team);
+        $user->syncRoles([$role], $team);
+
         // $nursery = Nurseries::create([
         //     'name' => 'Nursery 1',
         //     'email' => 'khaledmoussa202@gmail.com',
