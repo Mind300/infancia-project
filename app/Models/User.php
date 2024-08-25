@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Http\Controllers\Api\Kids\KidsController;
+use App\Http\Controllers\Api\Nurseries\NurseriesController;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
 use Laravel\Sanctum\HasApiTokens;
@@ -18,6 +19,8 @@ use Laratrust\Traits\HasRolesAndPermissions;
 
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+
+use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUser
 {
@@ -33,8 +36,8 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         'email',
         'phone',
         'password',
-        'country',
-        'city',
+        // 'country',
+        // 'city',
         'address'
     ];
 
@@ -107,7 +110,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
     // {
     //     return $this->hasOne('App\Models\Employee', 'user_id');
     // }
-    
+
     public function review()
     {
         return $this->hasOne(Reviews::class, 'user_id');
@@ -124,7 +127,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         static::creating(function ($model) {
             // Check the context flag   
             if (KidsController::$creatingKid) {
-                $model->password = $model->email; // Hash the password if needed
+                $model->password = $model->email;
             }
         });
     }

@@ -3,26 +3,31 @@
 namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Nurseries\ApproveNursery;
 use App\Http\Requests\Nursery\CreateNursery;
 use App\Http\Requests\Nursery\GalleryRequest;
 use App\Models\Nurseries;
 use App\Models\User;
+use App\Notifications\ApproveNotification;
+use App\Notifications\RegitserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
+use Illuminate\Support\Str;
 
 class NurseriesController extends Controller
 {
     // Variables
     private $nursery_id;
+    public static $creatingNursery = false;
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id;
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? null;
     }
 
     /**
@@ -49,22 +54,15 @@ class NurseriesController extends Controller
     public function store(CreateNursery $request)
     {
         DB::beginTransaction();
-
         try {
-            $user = User::create($request->safe()->only(['name', 'email', 'phone', 'password']));
-            $nurseryData = $request->safe()->except(['email', 'phone', 'password']);
+            // Set the context flag
+            self::$creatingNursery = true;
 
-            $nurseryData['user_id'] = $user->id;
-            $nursery = Nurseries::create($nurseryData);
-            $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
-
-            $team = Team::create(['name' => $user->name . 'Team']);
-            $role = Role::where('name', 'nursery_Owner')->first();
-
-
-            $user->addRole($role, $team);
-            $user->syncRoles([$role], $team);
-
+            $nursery = Nurseries::create($request->validated());
+            if ($request->has('media')) {
+                $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
+            }
+            $nursery->notify(new RegitserNotification());
             DB::commit();
             return messageResponse('Success, Nursery Created Successfully');
         } catch (\Throwable $error) {
@@ -105,5 +103,30 @@ class NurseriesController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function nurseryAprrove(ApproveNursery $request)
+    {
+        DB::beginTransaction();
+        try {
+            $nursery = Nurseries::findOrFail($request->validated('nursery_id'));
+            $nursery->update(['status' => $request->validated('status')]);
+            $nursery['password'] = Str::random(5);
+
+            $user = User::create($nursery->toArray());
+            
+            $team = Team::create(['name' => $user->name . 'Team']);
+            $role = Role::where('name', 'nursery_Owner')->first();
+            $user->addRole($role, $team);
+            $user->syncRoles([$role], $team);
+            $user->notify(new ApproveNotification($request->validated('status')));
+            DB::commit();
+            return messageResponse('Created Nursery Approve Successfully');
+        } catch (\Throwable $error) {
+            DB::rollBack();
+            return messageResponse($error->getMessage(), 403);
+        }
     }
 }

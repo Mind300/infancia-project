@@ -53,6 +53,7 @@ Route::apiResource('nursery-album', 'Nurseries\GalleryController');
 Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
 Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
 Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\GalleryController@deletePhoto');
+Route::post('nursery-approve', 'Nurseries\NurseriesController@nurseryAprrove');
 
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
@@ -113,3 +114,4 @@ Route::group(['middleware' => ['auth:api']], function () {
 });
 
 Route::get('/sendmail', 'Test\TestController@sendmail');
+    

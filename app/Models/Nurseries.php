@@ -20,15 +20,20 @@ class Nurseries extends Model implements HasMedia
      */
     protected $fillable = [
         'name',
+        'email',
+        'phone',
+        'country',
+        'city',
         'province',
         'address',
+        'start_fees',
         'branches_number',
         'classes_number',
-        'kids_number',
         'employees_number',
-        'about',
-        'start_fees',
+        'children_number',
         'services',
+        'about',
+        'status',
         'rateing',
         'user_id',
     ];

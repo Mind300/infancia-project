@@ -51,27 +51,33 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $user = User::create([
-            'name' => 'Nursery 1',
-            'email' => 'nursery1@gmail.com',
+            'name' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
             'phone' => '01015571129',
             'password' => '24001091Km'
         ]);
 
-        $nursery = Nurseries::create([
-            'name' => 'Nursery 1',
-            'province' => 'Nasr City',
-            'address' => 'Mohamed Tawfik',
-            'branches_number' => '5',
-            'kids_number' => '10',
-            'employees_number' => '5',
-            'about' => 'About The Nursery 1',
-            'user_id' => 1
-        ]);
+        // $nursery = Nurseries::create([
+        //     'name' => 'Nursery 1',
+        //     'email' => 'khaledmoussa202@gmail.com',
+        //     'phone' => '01015571129',
+        //     'country' => 'egypt',
+        //     'city' => 'cairo',
+        //     'address' => '15 Mohamed Tawfeek',
+        //     'province' => 'Nasr City',
+        //     'branches_number' => '5',
+        //     'start_fees' => '10000',
+        //     'classes_number' => '100',
+        //     'children_number' => '10',
+        //     'employees_number' => '5',
+        //     'services' => 'services lorem',
+        //     'about' => 'about lorem',
+        // ]);
 
-        $team = Team::create(['name' => $user->name . 'Team']);
-        $role = Role::where('name', 'nursery_Owner')->first();
+        // $team = Team::create(['name' => $user->name . 'Team']);
+        // $role = Role::where('name', 'nursery_Owner')->first();
 
-        $user->addRole($role, $team);
-        $user->syncRoles([$role], $team);
+        // $user->addRole($role, $team);
+        // $user->syncRoles([$role], $team);
     }
 }

@@ -22,17 +22,22 @@ class CreateNursery extends FormRequest
     public function rules(): array
     {
         return [
-            'media' => 'required|image',
+            'media' => 'nullable|image',
+            'name' => 'required|string|min:3|max:50',
             'email' => 'required|email:filter|unique:users,email',
             'phone' => 'required|string|unique:users,phone',
-            'password' => 'required|string',
-            'name' => 'required|string|min:3|max:50',
-            'province' => 'required|string|unique:users,phone',
+            'country' => 'required|string', 
+            'city' => 'required|string',
+            'province' => 'nullable|string',
             'address' => 'required|string',
             'branches_number' => 'required|integer',
-            'kids_number' => 'required|integer',
+            'start_fees' => 'nullable',
+            'classes_number' => 'required|integer',
+            'children_number' => 'required|integer',
             'employees_number' => 'required|integer',
+            'services' => 'nullable|string',
             'about' => 'nullable|string',
+            'password' => 'sometimes|string'
         ];
     }
 }

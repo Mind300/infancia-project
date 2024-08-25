@@ -14,17 +14,22 @@ return new class extends Migration
         Schema::create('nurseries', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('email')->unique();
+            $table->string('phone')->unique();
+            $table->string('country')->nullable();
+            $table->string('city')->nullable();
             $table->string('province')->nullable();
             $table->string('address')->nullable();
-            $table->bigInteger('branches_number')->default('0');
-            $table->bigInteger('classes_Number')->default('0');
-            $table->bigInteger('kids_Number')->default('0');
-            $table->bigInteger('employees_number')->default('0');
-            $table->longText('about')->nullable();
-            $table->decimal('start_fees')->nullable();
+            $table->bigInteger('branches_number')->default(0);
+            $table->decimal('start_fees')->default(0)->nullable();
+            $table->bigInteger('classes_Number')->default(0);
+            $table->bigInteger('children_number')->default(0);
+            $table->bigInteger('employees_number')->default(0);
             $table->longText('services')->nullable();
+            $table->longText('about')->nullable();
             $table->integer('rateing')->default(0);
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->enum('status', array('pending', 'accept', 'decline'))->default('pending');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });
     }

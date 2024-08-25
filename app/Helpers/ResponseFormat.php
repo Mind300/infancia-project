@@ -9,7 +9,7 @@ if (!function_exists('authResponse')) {
             'nursery_id' => $user->nursery->id ?? $user->parent->nursery_id  ?? null,
             'name' => $user->name,
             'email' => $user->email,
-            'role' => $user->roles[0]->name,
+            'role' => $user->roles[0]->name ?? null,
             'token' => $token,
             'message' => $message,
             'status' => $status,
