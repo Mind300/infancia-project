@@ -31,8 +31,6 @@ class DatabaseSeeder extends Seeder
             'Roles',
             'Faq',
         ];
-
-        
    
         foreach ($permissions as $permission) {
             $permissions[] = \Laratrust\Models\Permission::firstOrCreate([
@@ -41,49 +39,43 @@ class DatabaseSeeder extends Seeder
                 'description' => ucfirst($permission),
             ])->id;
         }
-        // Create admin User and assign the role to him.
-
-        // $user = User::create([
-        //     'name' => 'Khaled Moussa',
-        //     'email' => 'khaledmoussa202@gmail.com',
-        //     'phone' => '01015571129',
-        //     'password' => '24001091Km'
-        // ]);
 
         $user = User::create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@gmail.com',
-            'phone' => '01015571129',
+            'name' => 'Ahmed Sabry Test',
+            'email' => 'ahmaasabry22@gmail.com',
+            'phone' => '01212183908',
+            'address' => '15 Mohamed Tawfeek',
             'password' => '24001091Km'
         ]);
 
-        $team = Team::create(['name' => $user->name . 'Team']);
-        $role = Role::where('name', 'superAdmin')->first();
-
-        $user->addRole($role, $team);
-        $user->syncRoles([$role], $team);
-
-        // $nursery = Nurseries::create([
-        //     'name' => 'Nursery 1',
-        //     'email' => 'khaledmoussa202@gmail.com',
-        //     'phone' => '01015571129',
-        //     'country' => 'egypt',
-        //     'city' => 'cairo',
-        //     'address' => '15 Mohamed Tawfeek',
-        //     'province' => 'Nasr City',
-        //     'branches_number' => '5',
-        //     'start_fees' => '10000',
-        //     'classes_number' => '100',
-        //     'children_number' => '10',
-        //     'employees_number' => '5',
-        //     'services' => 'services lorem',
-        //     'about' => 'about lorem',
-        // ]);
-
         // $team = Team::create(['name' => $user->name . 'Team']);
-        // $role = Role::where('name', 'nursery_Owner')->first();
+        // $role = Role::where('name', 'superAdmin')->first();
 
         // $user->addRole($role, $team);
         // $user->syncRoles([$role], $team);
+
+        $nursery = Nurseries::create([
+            'name' => 'Ahmed Sabry Test',
+            'email' => 'ahmaasabry22@gmail.com',
+            'phone' => '01212183908',
+            'country' => 'egypt',
+            'city' => 'cairo',
+            'address' => '15 Mohamed Tawfeek',
+            'province' => 'Nasr City',
+            'branches_number' => '5',
+            'start_fees' => '10000',
+            'classes_number' => '100',
+            'children_number' => '10',
+            'employees_number' => '5',
+            'services' => 'services test',
+            'about' => 'about test',
+            'status' => 'pending',
+        ]);
+
+        $team = Team::create(['name' => $user->name . 'Team']);
+        $role = Role::where('name', 'nursery_Owner')->first();
+
+        $user->addRole($role, $team);
+        $user->syncRoles([$role], $team);
     }
 }
