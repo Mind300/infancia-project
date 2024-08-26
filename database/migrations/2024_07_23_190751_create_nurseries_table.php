@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('province')->nullable();
             $table->string('address')->nullable();
             $table->bigInteger('branches_number')->default(0);
-            $table->decimal('start_fees')->default(0)->nullable();
+            $table->double('start_fees')->default(0)->nullable();
             $table->bigInteger('classes_Number')->default(0);
             $table->bigInteger('children_number')->default(0);
             $table->bigInteger('employees_number')->default(0);

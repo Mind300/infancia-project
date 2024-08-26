@@ -23,7 +23,6 @@ class CreateUser extends FormRequest
     {
 
         return [
-            // 'image' => 'required|image',
             'name' => 'required|string|min:3|max:25',
             'email' => 'required|email:filter|unique:users,email',
             'phone' => 'required|unique:users,phone',
