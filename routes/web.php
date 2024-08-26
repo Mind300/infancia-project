@@ -1,6 +1,5 @@
 <?php
-
-use App\Http\Controllers\Api\Payment\CreditController;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-
-// paymob
-Route::post('/credit', [CreditController::class, 'credit'])->name('credit');
-Route::get('/callback', [CreditController::class, 'callback'])->name('callback');
+Route::get('/{any}', function () {
+    return File::get(public_path('index.html'));
+})->where('any', '.*');
