@@ -22,8 +22,7 @@ class ClassesController extends Controller
      */
     public function __construct()
     {
-        dd(auth()->user()->nursery);
-        $this->nursery_id = auth()->user()->id;
+        $this->nursery_id = auth()->user()->nursery->id;
     }
 
     /**
