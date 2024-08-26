@@ -28,7 +28,7 @@ return new class extends Migration
             $table->longText('services')->nullable();
             $table->longText('about')->nullable();
             $table->integer('rateing')->default(0);
-            $table->enum('status', array('pending', 'accept', 'decline'))->default('pending');
+            $table->enum('status', array('pending', 'accepted', 'rejected'))->default('pending');
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -49,6 +49,7 @@ Route::group(['middleware' => ['auth:api']], function () {
 
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
+Route::get('all-nurseries/{status}', 'Nurseries\NurseriesController@index')->name('nurseries.index');
 Route::apiResource('nursery-album', 'Nurseries\GalleryController');
 Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
 Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');

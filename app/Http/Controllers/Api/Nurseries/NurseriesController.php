@@ -12,6 +12,7 @@ use App\Notifications\ApproveNotification;
 use App\Notifications\RegitserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Password;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
 use Illuminate\Support\Str;
@@ -33,9 +34,9 @@ class NurseriesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(string $status)
     {
-        $nursries = Nurseries::get();
+        $nursries = Nurseries::where('status', $status)->get();
         return contentResponse($nursries, 'Fetches Nurseries Successfully');
     }
 
@@ -63,6 +64,7 @@ class NurseriesController extends Controller
                 $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
             }
             $nursery->notify(new RegitserNotification());
+
             DB::commit();
             return messageResponse('Success, Nursery Created Successfully');
         } catch (\Throwable $error) {
@@ -116,12 +118,13 @@ class NurseriesController extends Controller
             $nursery['password'] = Str::random(5);
 
             $user = User::create($nursery->toArray());
-            
+            $token = Password::createToken($user);
+
             $team = Team::create(['name' => $user->name . 'Team']);
             $role = Role::where('name', 'nursery_Owner')->first();
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
-            $user->notify(new ApproveNotification($request->validated('status')));
+            $user->notify(new ApproveNotification($user, $token, $request->validated('status')));
             DB::commit();
             return messageResponse('Created Nursery Approve Successfully');
         } catch (\Throwable $error) {
