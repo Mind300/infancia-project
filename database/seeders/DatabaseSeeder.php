@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             'Roles',
             'Faq',
         ];
-   
+
         foreach ($permissions as $permission) {
             $permissions[] = \Laratrust\Models\Permission::firstOrCreate([
                 'name' => $permission,
@@ -40,19 +40,28 @@ class DatabaseSeeder extends Seeder
             ])->id;
         }
 
-        $user = User::create([
+        // ======================= Admin Seeder Test ========================= //
+        $admin_user = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@gmail.com',
+            'phone' => '01015571129',
+            'address' => '15 Mohamed Tawfeek',
+            'password' => '24001091Km'
+        ]);
+        $team = Team::create(['name' => $admin_user->name . 'Team']);
+        $role = Role::where('name', 'superAdmin')->first();
+
+        $admin_user->addRole($role, $team);
+        $admin_user->syncRoles([$role], $team);
+
+        // ======================= Nursery Seeder Test ========================= //
+        $nursery_user = User::create([
             'name' => 'Ahmed Sabry Test',
             'email' => 'ahmaasabry22@gmail.com',
             'phone' => '01212183908',
             'address' => '15 Mohamed Tawfeek',
             'password' => '24001091Km'
         ]);
-
-        // $team = Team::create(['name' => $user->name . 'Team']);
-        // $role = Role::where('name', 'superAdmin')->first();
-
-        // $user->addRole($role, $team);
-        // $user->syncRoles([$role], $team);
 
         $nursery = Nurseries::create([
             'name' => 'Ahmed Sabry Test',
@@ -69,13 +78,14 @@ class DatabaseSeeder extends Seeder
             'employees_number' => '5',
             'services' => 'services test',
             'about' => 'about test',
-            'status' => 'pending',
+            'status' => 'accepted',
+            'user_id' => $nursery_user->id
         ]);
 
-        $team = Team::create(['name' => $user->name . 'Team']);
+        $team = Team::create(['name' => $nursery->name . 'Team']);
         $role = Role::where('name', 'nursery_Owner')->first();
 
-        $user->addRole($role, $team);
-        $user->syncRoles([$role], $team);
+        $nursery_user->addRole($role, $team);
+        $nursery_user->syncRoles([$role], $team);
     }
 }
