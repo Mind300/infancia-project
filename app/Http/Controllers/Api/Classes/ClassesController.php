@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Classes;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Absent\AbsentRequest;
 use App\Http\Requests\Classes\ClassesRequest;
-use App\Http\Requests\Classes\CreateClasses;
 use App\Models\Absence;
 use App\Models\Classes;
 use App\Models\Kids;
@@ -16,13 +15,15 @@ class ClassesController extends Controller
 {
     // Variables
     private $nursery_id;
+    
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id;
+        dd(auth()->user()->nursery);
+        $this->nursery_id = auth()->user()->id;
     }
 
     /**

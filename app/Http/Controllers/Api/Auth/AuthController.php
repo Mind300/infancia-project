@@ -24,7 +24,7 @@ class AuthController extends Controller
         if (!$token) {
             return messageResponse('Email Or Password is not correct', 401);
         }
-        return authResponse($token, auth()->user(), 'Login Successfully');
+        return authResponse($token, 'Login Successfully');
     }
 
     // Get a JWT via given registred.

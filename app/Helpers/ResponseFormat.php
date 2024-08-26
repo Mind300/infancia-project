@@ -2,14 +2,14 @@
 
 // For Auth Response
 if (!function_exists('authResponse')) {
-    function authResponse($token = null, $user = null, $message = null, $status = 200)
+    function authResponse($token = null, $message = null, $status = 200)
     {
         return response()->json([
-            'id' => $user->id,
+            'id' => auth()->user()->id,
             'nursery_id' => $user->nursery->id ?? $user->parent->nursery_id  ?? null,
-            'name' => $user->name,
-            'email' => $user->email,
-            'role' => $user->roles[0]->name ?? null,
+            'name' => auth()->user()->name,
+            'email' => auth()->user()->email,
+            'role' => auth()->user()->roles[0]->name ?? null,
             'token' => $token,
             'message' => $message,
             'status' => $status,

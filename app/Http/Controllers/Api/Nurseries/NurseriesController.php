@@ -47,8 +47,6 @@ class NurseriesController extends Controller
     {
         DB::beginTransaction();
         try {
-            // Set the context flag
-            self::$creatingNursery = true;
 
             $nursery = Nurseries::create($request->validated());
             if ($request->has('media')) {
@@ -104,17 +102,21 @@ class NurseriesController extends Controller
     {
         DB::beginTransaction();
         try {
+            // Set the context flag
+            self::$creatingNursery = true;
+
             $nursery = Nurseries::findOrFail($request->validated('nursery_id'));
-            $nursery->update(['status' => $request->validated('status')]);
-            $nursery['password'] = Str::random(5);
 
             $user = User::create($nursery->toArray());
             $token = Password::createToken($user);
+
+            $nursery->update(['status' => $request->validated('status'), 'user_id' => $user->id]);
 
             $team = Team::create(['name' => $user->name . 'Team']);
             $role = Role::where('name', 'nursery_Owner')->first();
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
+
             $user->notify(new ApproveNotification($user, $token, $request->validated('status')));
             DB::commit();
             return messageResponse('Created Nursery Approve Successfully');
