@@ -23,7 +23,7 @@ class ApproveNursery extends FormRequest
     {
         return [
             'nursery_id' => 'required|integer',
-            'status' => 'required|in:accept, decline|string',
+            'status' => 'required|in:accepted, rejected|string',
         ];
     }
 }

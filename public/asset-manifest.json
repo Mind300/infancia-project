@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.20abcd3e.css",
+    "main.js": "/static/js/main.8ef0d7d1.js",
+    "static/js/453.98ede01f.chunk.js": "/static/js/453.98ede01f.chunk.js",
+    "static/media/User.jpg": "/static/media/User.d26097d299c6a09845c1.jpg",
+    "static/media/RegisterImage.jpg": "/static/media/RegisterImage.887a79ca9ef18d04bd9b.jpg",
+    "static/media/NewsletterImage.jpg": "/static/media/NewsletterImage.1bf0af845309b3d037ff.jpg",
+    "static/media/GalleryTempImage.jpg": "/static/media/GalleryTempImage.cfc1f8d57c861b8a813f.jpg",
+    "static/media/NurseryProfileImageTop.jpg": "/static/media/NurseryProfileImageTop.49e17165e36069fba3ba.jpg",
+    "static/media/22-26.png": "/static/media/22-26.46a39d799a4b28b1a038.png",
+    "static/media/INFANCIA_LOGO.png": "/static/media/INFANCIA_LOGO.c60914df65eae4c1a72f.png",
+    "static/media/HeaderLogo.png": "/static/media/HeaderLogo.314cf2db3ab66f915427.png",
+    "static/media/Breakfast.png": "/static/media/Breakfast.8a3ef46fa08eddcc8a44.png",
+    "static/media/lunch.png": "/static/media/lunch.10afbb9d77f51904e21b.png",
+    "static/media/snacks.png": "/static/media/snacks.f25d6f5b588f2654799a.png",
+    "static/media/revicons.eot": "/static/media/revicons.a77de540a38981833f9e.eot",
+    "static/media/revicons.ttf": "/static/media/revicons.57fd05d4ae650374c8de.ttf",
+    "static/media/revicons.woff": "/static/media/revicons.e8746a624ed098489406.woff",
+    "index.html": "/index.html",
+    "main.20abcd3e.css.map": "/static/css/main.20abcd3e.css.map",
+    "main.8ef0d7d1.js.map": "/static/js/main.8ef0d7d1.js.map",
+    "453.98ede01f.chunk.js.map": "/static/js/453.98ede01f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.20abcd3e.css",
+    "static/js/main.8ef0d7d1.js"
+  ]
+}

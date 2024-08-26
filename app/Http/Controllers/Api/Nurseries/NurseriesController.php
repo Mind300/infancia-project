@@ -40,15 +40,6 @@ class NurseriesController extends Controller
         return contentResponse($nursries, 'Fetches Nurseries Successfully');
     }
 
-    // /**
-    //  * Show the form for creating a new resource.
-    //  */
-    // public function create(CreateNursery $request)
-    // {
-    //     $nursries = Nurseries::get();
-    //     return contentResponse($nursries, 'Fetches Nurseries Successfully');
-    // }
-
     /**
      * Store a newly created resource in storage.
      */
