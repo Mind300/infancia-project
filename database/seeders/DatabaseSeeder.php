@@ -56,7 +56,7 @@ class DatabaseSeeder extends Seeder
 
         // ======================= Nursery Seeder Test ========================= //
         $nursery_user = User::create([
-            'name' => 'Ahmed Sabry Test',
+            'name' => 'Kiddy Corrner',
             'email' => 'ahmaasabry22@gmail.com',
             'phone' => '01212183908',
             'address' => '15 Mohamed Tawfeek',
@@ -64,11 +64,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $nursery = Nurseries::create([
-            'name' => 'Ahmed Sabry Test',
+            'name' => 'Kiddy Corrner',
             'email' => 'ahmaasabry22@gmail.com',
             'phone' => '01212183908',
-            'country' => 'egypt',
-            'city' => 'cairo',
+            'country' => 'Egypt',
+            'city' => 'Cairo',
             'address' => '15 Mohamed Tawfeek',
             'province' => 'Nasr City',
             'branches_number' => '5',
@@ -76,8 +76,9 @@ class DatabaseSeeder extends Seeder
             'classes_number' => '100',
             'children_number' => '10',
             'employees_number' => '5',
-            'services' => 'services test',
-            'about' => 'about test',
+            'services' => 'Nutritious Meals
+                          Safe Environment',
+            'about' => 'At Kiddy Corrner, our ultimate goal is to provide a nurturing a...',
             'status' => 'accepted',
             'user_id' => $nursery_user->id
         ]);

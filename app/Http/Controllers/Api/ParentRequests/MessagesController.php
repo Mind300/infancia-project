@@ -32,7 +32,6 @@ class MessagesController extends Controller
     public function sendMessage(MessageRequest $request)
     {
         $data = $request->validated();
-        $data['sender'] = auth()->user()->id;
 
         $chat = Chat::whereIn('sender', [$data['sender'], $data['receiver']])->where('closed', 0)->first();
 
@@ -43,8 +42,7 @@ class MessagesController extends Controller
         $data['chat_id'] = $chat->id;
 
         $message =  Message::create($data);
-        $receiver = User::find($data['receiver']);
-        broadcast(new ChatSent($receiver, $message))->toOthers();
+        broadcast(new ChatSent($data['sender'], $data['receiver'], $message))->toOthers();
         return contentResponse($message, 'Send Message Successfully');
     }
 

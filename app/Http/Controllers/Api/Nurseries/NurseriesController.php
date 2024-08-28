@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Nurseries\ApproveNursery;
 use App\Http\Requests\Nursery\CreateNursery;
 use App\Http\Requests\Nursery\GalleryRequest;
+use App\Models\Employees;
 use App\Models\Nurseries;
 use App\Models\User;
 use App\Notifications\ApproveNotification;
@@ -124,5 +125,11 @@ class NurseriesController extends Controller
             DB::rollBack();
             return messageResponse($error->getMessage(), 403);
         }
+    }
+
+    // Display a listing of the resource.
+    public function nurseryUsers()
+    {
+        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Nurseries Successfully');
     }
 }

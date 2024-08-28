@@ -17,13 +17,14 @@ class Employees extends Model
      * @var array<int, string>
      */
     protected $fillable = [
+        'type',
         'user_id',
         'nursery_id',
     ];
 
     public function user()
     {
-        return $this->hasOne(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function nursery()

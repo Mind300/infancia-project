@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Api\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\CreateUser;
 use App\Http\Requests\Users\UpdateUser;
-// Request
-use Illuminate\Http\Request;
+use App\Models\Employees;
+use App\Models\Nurseries;
 // Models
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -16,8 +16,16 @@ use Laratrust\Models\Team;
 
 class UsersController extends Controller
 {
+    private $nursery_id;
+    private $user_id;
+    /**
+     * Construct a instance of the resource.
+     */
     public function __construct()
     {
+        $this->nursery_id = auth()->user()->nursery->id ?? null;
+        $this->user_id = auth()->user()->id;
+
         // $this->middleware(['role:AdminRole']);
         // $this->middleware(['role:Employee'], ['only' => ['store', 'update']]);
 
@@ -30,7 +38,7 @@ class UsersController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        return contentResponse(User::get(), 'Fetches Users Successfully');
+        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->get(), 'Fetches Users Successfully');
     }
 
     // Store a newly created resource in storage.
@@ -40,18 +48,24 @@ class UsersController extends Controller
 
         try {
             $user = User::create($request->validated());
-            // $user->addMediaFromRequest('image')->toMediaCollection('profiles');
 
-            $team = Team::where('name', auth()->user()->nursery->name . 'Team')->first();
+            $team = Team::where('name', auth()->user()->nursery->name . 'Team' ?? auth()->user()->name . 'Team')->first();
             $role = Role::where('name', $request->safe()->only('role'))->where('team_id', $team->id)->first();
 
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
 
-            // $showusers = Permission::where('name', 'show_users')->first();
-            // $user->givePermission($showusers, $team);
-            DB::commit();
+            $data = [
+                'type' => $role->name,
+                'user_id' => $user->id,
+                'nursery_id' => $this->nursery_id,
+            ];
 
+            if ($this->nursery_id) {
+                Employees::create($data);
+            }
+
+            DB::commit();
             return messageResponse('Success, User Created Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();

@@ -13,11 +13,9 @@ class ChatSent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public User $receiver;
-    public string $message;
-
-    public function __construct(User $receiver, string $message)
+    public function __construct(public $sender,  public $receiver, public $message)
     {
+        $this->sender = $sender;
         $this->receiver = $receiver;
         $this->message = $message;
     }
@@ -29,8 +27,8 @@ class ChatSent implements ShouldBroadcast
      */
     public function broadcastOn(): Channel
     {
-        $senderId = auth()->user()->id;
-        $receiverId = $this->receiver->id;
+        $senderId = $this->sender;
+        $receiverId = $this->receiver;
 
         // Create a unique channel name using the user IDs in ascending order
         $channelName = 'chat.' . min($senderId, $receiverId) . '.' . max($senderId, $receiverId);

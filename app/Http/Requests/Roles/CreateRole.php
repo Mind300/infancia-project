@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Roles;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Laratrust\Models\Team;
 
 class CreateRole extends FormRequest
 {
@@ -21,10 +22,12 @@ class CreateRole extends FormRequest
      */
     public function rules(): array
     {
-        $userId = auth()->user()->id;
+        $user_name = auth()->user()->name;
+        $team = Team::firstWhere('name', $user_name.'Team');
+        $team_id = $team->id;
 
         return [
-            'name' => 'required|string',
+            'name' => 'required|string|unique:roles,name,' . $team_id,
             'display_name' => 'nullable|string',
             'description' => 'nullable|string',
             'permissions' => 'required|array',
