@@ -173,7 +173,7 @@ class KidsController extends Controller
         }
 
         $today = Carbon::today()->startOfDay();
-        $kidsBirth = Kids::whereMonth('birthdate', $month)->get();
+        $kidsBirth = Kids::whereMonth('birthdate', $month)->where('nursery_id', $this->nursery_id)->get();
 
         $kids = $kidsBirth->map(function ($kid) use ($today) {
             $birthdateKid =  Carbon::parse($kid->birthdate);
