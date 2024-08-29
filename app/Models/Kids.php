@@ -22,6 +22,7 @@ class Kids extends Model implements HasMedia
         'kid_name',
         'gender',
         'birthdate',
+        'city',
         'has_medical_case',
         'parent_id',
         'nursery_id',
