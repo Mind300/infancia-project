@@ -46,7 +46,7 @@ class NewslettersController extends Controller
      */
     public function index()
     {
-        $newsletters = NewsLetters::get();
+        $newsletters = NewsLetters::where('nursery_id', $this->nursery_id)->get();
         $newsletters = $newsletters->map(function ($newsletter) {
             return $this->data($newsletter);
         });
