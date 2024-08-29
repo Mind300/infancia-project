@@ -27,18 +27,18 @@ class AuthController extends Controller
         return authResponse($token, 'Login Successfully');
     }
 
-    // Get a JWT via given registred.
-    public function register(RegisterRequest $request)
-    {
-        $user = User::create($request->validated());
+    // // Get a JWT via given registred.
+    // public function register(RegisterRequest $request)
+    // {
+    //     $user = User::create($request->validated());
 
-        if (!$user) {
-            return messageResponse('An error occured during registred account..!!', 500);
-        }
+    //     if (!$user) {
+    //         return messageResponse('An error occured during registred account..!!', 500);
+    //     }
 
-        $token = auth()->login($user);
-        return authResponse($token, 'Login Successfully');
-    }
+    //     $token = auth()->login($user);
+    //     return authResponse($token, 'Login Successfully');
+    // }
 
     // Get the authenticated User.
     public function me()
@@ -92,12 +92,5 @@ class AuthController extends Controller
     {
         $token = auth()->refresh();
         return response()->json(['token' => $token]);
-    }
-
-    // Get a token by id
-    public function tokenById($id)
-    {
-        $token = auth()->tokenById($id);
-        return authResponse($token, 'Get Token By ID Successfully');
     }
 }

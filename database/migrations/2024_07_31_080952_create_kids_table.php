@@ -16,6 +16,7 @@ return new class extends Migration
 			$table->string('kid_name');
 			$table->enum('gender', array('boy', 'girl'));
 			$table->date('birthdate');
+			$table->string('city');
 			$table->boolean('has_medical_case')->default(0);
             $table->foreignId('parent_id')->constained('parents');
             $table->foreignId('class_id')->constained('parents');
