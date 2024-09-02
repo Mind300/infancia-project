@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Laratrust\Contracts\LaratrustUser;
-use Laratrust\Models\Role;
 use Laratrust\Traits\HasRolesAndPermissions;
 
 use Spatie\MediaLibrary\HasMedia;
@@ -82,7 +81,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         return [];
     }
 
-    // Spatie Media Library Collections
+    // --------------------- Spatie --------------------- //
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('avatar')->singleFile();
@@ -104,22 +103,17 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         return $this->hasOne(NewslettersLikes::class, 'user_id');
     }
 
-    // public function employee()
-    // {
-    //     return $this->hasOne('App\Models\Employee', 'user_id');
-    // }
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'user_id');
+    }
 
     public function review()
     {
         return $this->hasOne(Reviews::class, 'user_id');
     }
 
-    // public function requests()
-    // {
-    //     return $this->hasMany('App\Models\ParentRequest', 'user_id');
-    // }
-
-    // Observe
+    // --------------------- Observe --------------------- //
     protected static function booted(): void
     {
         static::creating(function ($model) {
@@ -129,8 +123,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
             }
             if (NurseriesController::$creatingNursery) {
                 $model->password = Str::random(5);
-            }            
-
+            }
         });
     }
 }

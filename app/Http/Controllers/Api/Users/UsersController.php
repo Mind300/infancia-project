@@ -5,13 +5,11 @@ namespace App\Http\Controllers\Api\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\CreateUser;
 use App\Http\Requests\Users\UpdateUser;
-use App\Models\Employees;
+use App\Models\Employee;
 use App\Models\ManageClass;
-use App\Models\Nurseries;
 // Models
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
-use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
 
@@ -39,7 +37,7 @@ class UsersController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Successfully');
+        return contentResponse(Employee::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Successfully');
     }
 
     // Store a newly created resource in storage.
@@ -64,7 +62,7 @@ class UsersController extends Controller
             }
 
             if ($this->nursery_id) {
-                Employees::create($data);
+                Employee::create($data);
             }
 
             DB::commit();

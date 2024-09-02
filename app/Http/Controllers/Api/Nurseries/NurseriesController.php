@@ -6,11 +6,12 @@ use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nurseries\ApproveNursery;
 use App\Http\Requests\Nursery\CreateNursery;
-use App\Models\Employees;
+use App\Models\Employee;
 use App\Models\Nurseries;
 use App\Models\User;
 use App\Notifications\ApproveNotification;
 use App\Notifications\RegitserNotification;
+use App\Notifications\RejectedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
@@ -73,14 +74,6 @@ class NurseriesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
@@ -115,13 +108,17 @@ class NurseriesController extends Controller
             $team = Team::create(['name' => $user->name . 'Team']);
             $role = Role::where('name', 'nursery_Owner')->first();
             $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
-
+            
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
             $user->syncRoles([$teacher], $team);
 
-            $startPayment = new PaymentController($nursery->name, $nursery->email, $nursery->phone, $nursery->children_number, $nursery->country, $nursery->city);
-            $user->notify(new ApproveNotification($user, $token, $request->validated('status')));
+            if ($request->validated('status') === 'accepted') {
+                $user->notify(new ApproveNotification($nursery, $token, $request->validated('status')));
+            } else {
+                $user->notify(new RejectedNotification());
+            }
+
             DB::commit();
             return messageResponse('Created Nursery Approve Successfully');
         } catch (\Throwable $error) {
@@ -133,6 +130,6 @@ class NurseriesController extends Controller
     // Display a listing of the resource.
     public function nurseryUsers()
     {
-        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Nurseries Successfully');
+        return contentResponse(Employee::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Nurseries Successfully');
     }
 }

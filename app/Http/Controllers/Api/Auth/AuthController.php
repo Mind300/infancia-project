@@ -7,11 +7,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ForgetPassword;
 // Requests
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\RegisterRequest;
 use App\Http\Requests\Auth\ResetPassword;
 // Illuminate
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Facades\Request;
 // Models
 use App\Models\User;
 
@@ -26,19 +24,6 @@ class AuthController extends Controller
         }
         return authResponse($token, 'Login Successfully');
     }
-
-    // // Get a JWT via given registred.
-    // public function register(RegisterRequest $request)
-    // {
-    //     $user = User::create($request->validated());
-
-    //     if (!$user) {
-    //         return messageResponse('An error occured during registred account..!!', 500);
-    //     }
-
-    //     $token = auth()->login($user);
-    //     return authResponse($token, 'Login Successfully');
-    // }
 
     // Get the authenticated User.
     public function me()
@@ -88,7 +73,7 @@ class AuthController extends Controller
     }
 
     // Refresh a token.
-    public function refresh(Request $request)
+    public function refresh()
     {
         $token = auth()->refresh();
         return response()->json(['token' => $token]);

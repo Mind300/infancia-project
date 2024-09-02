@@ -3,37 +3,24 @@
 namespace App\Http\Controllers\Api\Payments;
 
 use App\Http\Controllers\Controller;
+use App\Models\Nurseries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class PaymentController extends Controller
 {
-    public function __construct(
-        public $nursery_name,
-        public $nursery_email,
-        public $nursery_phone,
-        public $nursery_children,
-        public $nursery_country,
-        public $nursery_city
-    ) {
-        $this->nursery_name = $nursery_name;
-        $this->nursery_email = $nursery_email;
-        $this->nursery_phone = $nursery_phone;
-        $this->nursery_children = $nursery_children;
-        $this->nursery_city = $nursery_city;
-        $this->nursery_country = $nursery_country;
+    public function __construct(public $nursery)
+    {
+        $this->nursery = $nursery;
     }
 
     public function paymentCreateSubscription()
     {
         $tokenResponse = $this->paymentConfig();
-        $token = $tokenResponse['token']; // Accessing token directly from the array
-
+        $token = $tokenResponse['token'];
         $order = $this->paymentCreateOrder($token);
         $paymentToken = $this->paymentKeys($order, $token);
-
         return 'https://portal.weaccept.co/api/acceptance/iframes/' . env('PAYMOB_IFRAME_ID') . '?payment_token=' . $paymentToken;
-        // return \Redirect::away('https://portal.weaccept.co/api/acceptance/iframes/' . env('PAYMOB_IFRAME_ID') . '?payment_token=' . $paymentToken);
     }
 
     public function paymentConfig()
@@ -43,17 +30,16 @@ class PaymentController extends Controller
         ]);
 
         return $response->json();
-        // dd($response->json());
     }
 
     public function paymentCreateOrder($token)
     {
         $items = [
             [
-                "name" => $this->nursery_name,
+                "name" => $this->nursery->name,
                 "amount_cents" => "5000",  // 5000.00 EGP
                 "description" => "Subscribtion",
-                "quantity" => $this->nursery_children,
+                "quantity" => $this->nursery->children_number,
             ],
         ];
 
@@ -76,13 +62,13 @@ class PaymentController extends Controller
     public function paymentKeys($order, $token)
     {
         $billingData = [
-            "first_name" => $this->nursery_name, //Required
+            "first_name" => $this->nursery->name, //Required
             "last_name" => "Nicolas", //Optional
-            "email" => $this->nursery_email, //Required
-            "city" => $this->nursery_city,
+            "email" => $this->nursery->email, //Required
+            "city" => $this->nursery->city,
             "state" => "Egypt", //Required
             "country" => "Egypt", //Required
-            "phone_number" => $this->nursery_phone, //Required
+            "phone_number" => $this->nursery->phone, //Required
             "apartment" => "null", //Required
             "floor" => "null", //Required
             "postal_code" => "null", //Optional

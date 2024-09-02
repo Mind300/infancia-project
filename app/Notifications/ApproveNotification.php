@@ -12,11 +12,10 @@ class ApproveNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(public $user, public $token, public $approve)
+    public function __construct(public $nursery, public $token)
     {
-        $this->user = $user;
+        $this->nursery = $nursery;
         $this->token = $token;
-        $this->approve = $approve;
     }
 
     public function via(object $notifiable): array
@@ -26,19 +25,8 @@ class ApproveNotification extends Notification
 
     public function toMail(object $notifiable): MailMessage
     {
-        $url = env('FRONTEND_URL') . 'token=' . $this->token . '&&email=' . $this->user->email;
-
-        // Create PaymentController instance and get payment URL
-        $paymentController = new PaymentController(
-            "Sunny Day Nursery",
-            "contact@sunnydaynursery.com",
-            "+86(8)9135210487",
-            "50",
-            "USA",
-            "Springfield"
-        );
-
-        // Call method to get payment URL
+        $url = env('FRONTEND_URL') . 'token=' . $this->token . '&&email=' . $notifiable->email;
+        $paymentController = new PaymentController($this->nursery);
         $paymentUrl = $paymentController->paymentCreateSubscription();
 
         return (new MailMessage)
@@ -49,7 +37,7 @@ class ApproveNotification extends Notification
             ->line('**Email:** [info@infancia.com](mailto:info@infancia.com)')
             ->line('**Phone:** +202 22746241')
             ->action('Login here', $url)
-            ->action('Complete Payment', $paymentUrl)  // Use payment URL here
+            ->action('Complete Payment', $paymentUrl)
             ->line('---')
             ->line('Thank you for choosing **Infancia**. We are excited to support your nursery on this journey.')
             ->salutation('Best regards,');
