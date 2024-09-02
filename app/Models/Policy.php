@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Policy extends Model
 {
-    use HasFactory, HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, HasApiTokens, Notifiable;
 
 
     /**
@@ -22,10 +22,6 @@ class Policy extends Model
         'description',
         'nursery_id',
     ];
-
-
-
-
 
     public function nursery()
     {

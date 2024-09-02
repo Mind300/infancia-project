@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Faq extends Model
 {
-    use HasFactory, HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, HasApiTokens, Notifiable;
 
     /**
      * The attributes that are mass assignable.
