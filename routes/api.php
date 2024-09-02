@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -115,5 +116,5 @@ Route::group(['middleware' => ['auth:api']], function () {
     Route::apiResource('/parent', 'Parent\ParentController');
 });
 
-Route::get('/sendmail', 'Test\TestController@sendmail');
+Route::get('/sendmail', [Controller::class, 'demoMail']);
     

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Api\Nurseries;
 
+use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nurseries\ApproveNursery;
 use App\Http\Requests\Nursery\CreateNursery;
-use App\Http\Requests\Nursery\GalleryRequest;
 use App\Models\Employees;
 use App\Models\Nurseries;
 use App\Models\User;
@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
-use Illuminate\Support\Str;
 
 class NurseriesController extends Controller
 {
@@ -118,6 +117,7 @@ class NurseriesController extends Controller
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
 
+            $startPayment = new PaymentController($nursery->name, $nursery->email, $nursery->phone, $nursery->children_number, $nursery->country, $nursery->city);
             $user->notify(new ApproveNotification($user, $token, $request->validated('status')));
             DB::commit();
             return messageResponse('Created Nursery Approve Successfully');

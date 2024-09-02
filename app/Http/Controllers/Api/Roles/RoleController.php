@@ -30,8 +30,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $user_name = auth()->user()->name;
-        $team = Team::firstWhere('name', $user_name . 'Team');
+        $nursery_name = auth()->user()->nursery->name;
+        $team = Team::firstWhere('name', $nursery_name . 'Team');
         $roles = Role::where('team_id', $team->id)->with('permissions')->get();
         return contentResponse($roles, 'Success');
     }
@@ -43,7 +43,7 @@ class RoleController extends Controller
     {
         // Get or create the team associated with the current user
         $team = Team::firstWhere('name', auth()->user()->nursery->name . 'Team');
-        if(!$team){
+        if (!$team) {
             $team = Team::create(['name' => auth()->user()->nursery->name . 'Team' ?? auth()->user()->name . 'Team', 'display_name' => auth()->user()->nursery->name ?? auth()->user()->name, 'description' => auth()->user()->nursery->name ?? auth()->user()->name],);
         }
 
