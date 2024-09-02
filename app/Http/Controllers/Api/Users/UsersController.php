@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\CreateUser;
 use App\Http\Requests\Users\UpdateUser;
 use App\Models\Employees;
+use App\Models\ManageClass;
 use App\Models\Nurseries;
 // Models
 use App\Models\User;
@@ -54,12 +55,13 @@ class UsersController extends Controller
 
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
+            $data = ['type' => $role->name, 'user_id' => $user->id, 'nursery_id' => $this->nursery_id,];
 
-            $data = [
-                'type' => $role->name,
-                'user_id' => $user->id,
-                'nursery_id' => $this->nursery_id,
-            ];
+            if ($role->name == 'teacher') {
+                foreach ($request->validated('classes') as $class) {
+                    ManageClass::create(['user_id' => $user->id, 'class_id' => $class['class_id'], 'nursery_id' => $this->nursery_id]);
+                }
+            }
 
             if ($this->nursery_id) {
                 Employees::create($data);

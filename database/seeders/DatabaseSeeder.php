@@ -55,39 +55,39 @@ class DatabaseSeeder extends Seeder
         $admin_user->syncRoles([$role], $team);
 
         // ======================= Nursery Seeder Test ========================= //
-        $nursery_user = User::create([
-            'name' => 'Kiddy Corrner',
-            'email' => 'ahmaasabry22@gmail.com',
-            'phone' => '01212183908',
-            'address' => '15 Mohamed Tawfeek',
-            'password' => '24001091Km'
-        ]);
+        // $nursery_user = User::create([
+        //     'name' => 'Kiddy Corrner',
+        //     'email' => 'ahmaasabry22@gmail.com',
+        //     'phone' => '01212183908',
+        //     'address' => '15 Mohamed Tawfeek',
+        //     'password' => '24001091Km'
+        // ]);
 
-        $nursery = Nurseries::create([
-            'name' => 'Kiddy Corrner',
-            'email' => 'ahmaasabry22@gmail.com',
-            'phone' => '01212183908',
-            'country' => 'Egypt',
-            'city' => 'Cairo',
-            'address' => '15 Mohamed Tawfeek',
-            'province' => 'Nasr City',
-            'branches_number' => '5',
-            'start_fees' => '10000',
-            'classes_number' => '100',
-            'children_number' => '10',
-            'employees_number' => '5',
-            'services' => 'Nutritious Meals
-                          Safe Environment',
-            'about' => 'At Kiddy Corrner, our ultimate goal is to provide a nurturing a...',
-            'status' => 'accepted',
-            'user_id' => $nursery_user->id
-        ]);
+        // $nursery = Nurseries::create([
+        //     'name' => 'Kiddy Corrner',
+        //     'email' => 'ahmaasabry22@gmail.com',
+        //     'phone' => '01212183908',
+        //     'country' => 'Egypt',
+        //     'city' => 'Cairo',
+        //     'address' => '15 Mohamed Tawfeek',
+        //     'province' => 'Nasr City',
+        //     'branches_number' => '5',
+        //     'start_fees' => '10000',
+        //     'classes_number' => '100',
+        //     'children_number' => '10',
+        //     'employees_number' => '5',
+        //     'services' => 'Nutritious Meals
+        //                   Safe Environment',
+        //     'about' => 'At Kiddy Corrner, our ultimate goal is to provide a nurturing a...',
+        //     'status' => 'accepted',
+        //     'user_id' => $nursery_user->id
+        // ]);
 
-        $team = Team::create(['name' => $nursery->name . 'Team']);
-        $role = Role::where('name', 'nursery_Owner')->first();
+        // $team = Team::create(['name' => $nursery->name . 'Team']);
+        // $role = Role::where('name', 'nursery_Owner')->first();
 
-        $nursery_user->addRole($role, $team);
-        $nursery_user->syncRoles([$role], $team);
+        // $nursery_user->addRole($role, $team);
+        // $nursery_user->syncRoles([$role], $team);
 
         // ABC Nursery
         $nursery_user = User::create([

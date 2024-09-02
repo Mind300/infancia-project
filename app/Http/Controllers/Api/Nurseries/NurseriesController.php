@@ -114,8 +114,11 @@ class NurseriesController extends Controller
 
             $team = Team::create(['name' => $user->name . 'Team']);
             $role = Role::where('name', 'nursery_Owner')->first();
+            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
+
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
+            $user->syncRoles([$teacher], $team);
 
             $startPayment = new PaymentController($nursery->name, $nursery->email, $nursery->phone, $nursery->children_number, $nursery->country, $nursery->city);
             $user->notify(new ApproveNotification($user, $token, $request->validated('status')));

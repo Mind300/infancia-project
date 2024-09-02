@@ -27,7 +27,9 @@ class CreateUser extends FormRequest
             'email' => 'required|email:filter|unique:users,email',
             'phone' => 'required|unique:users,phone',
             'password' => 'required|string|min:8|confirmed',
-            'role' => 'required|string'
+            'role' => 'required|string',
+            'classes' => 'sometimes|array',
+            'classes.*.class_id' => 'required|integer',
         ];
     }
 }

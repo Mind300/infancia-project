@@ -43,6 +43,7 @@ return [
         'parent' => [
             'users' => 'r',
         ],
+
     ],
 
     'permissions_map' => [
