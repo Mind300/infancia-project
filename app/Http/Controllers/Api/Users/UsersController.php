@@ -38,7 +38,7 @@ class UsersController extends Controller
     // Display a listing of the resource.
     public function index()
     {
-        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->get(), 'Fetches Users Successfully');
+        return contentResponse(Employees::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Successfully');
     }
 
     // Store a newly created resource in storage.

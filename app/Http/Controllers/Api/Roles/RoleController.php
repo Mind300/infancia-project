@@ -4,9 +4,6 @@ namespace App\Http\Controllers\Api\Roles;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\CreateRole;
-use App\Models\User;
-use Illuminate\Http\Request;
-
 use Laratrust\Models\Permission;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
