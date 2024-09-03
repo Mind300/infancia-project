@@ -41,6 +41,7 @@ class RegitserNotification extends Notification
             ->line('**Email:** [info@infanica.com](mailto:info@infanica.com)')
             ->line('**Phone:** +202 22746241')
             ->line('---') // Horizontal rule
+            ->action('test', env('app_url'))
             ->line('Thank you for trusting **Infancia** with your nursery\'s registration. We look forward to working with you.')
             ->salutation('Best regards,');
     }

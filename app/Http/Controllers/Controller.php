@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Notifications\ApproveNotification;
 use App\Notifications\DemoNotification;
+use App\Notifications\RegitserNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -17,7 +18,6 @@ class Controller extends BaseController
     public function demoMail()
     {
         $user = User::find(2);
-        $token = Password::createToken($user);
-        $user->notify(new ApproveNotification($user, $token, 'accept'));
+        $user->notify(new RegitserNotification());
     }
 }
