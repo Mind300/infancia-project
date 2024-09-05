@@ -74,7 +74,6 @@ class AuthController extends Controller
         $status = Password::reset($request->validated(), function (User $user, string $password) {
             $user->update(['password' => $password]);
         });
-        return $status;
         return $status === Password::PASSWORD_RESET ? messageResponse('Password Reset Successfully') : messageResponse('Failed, Error occured when reseting password', 403);
     }
 
@@ -86,9 +85,9 @@ class AuthController extends Controller
     }
 
     // Email Check.
-    public function emailCheck(CheckEmailRequest $request)
+    public function checkEmail(CheckEmailRequest $request)
     {
-        $user = User::where('email', $request->validated('email'));
+        $user = User::firstWhere('email', $request->validated('email'));
         return $user ? messageResponse() : messageResponse('Failed, Email not found..!', 404);
     }
 

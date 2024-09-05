@@ -20,6 +20,7 @@ Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::post('login', 'Auth\AuthController@login');
         Route::post('register', 'Auth\AuthController@register');
+        Route::post('check/email', 'Auth\AuthController@checkEmail');
         Route::post('otp/send', 'Auth\AuthController@otpSend');
         Route::post('otp/check', 'Auth\AuthController@otpCheck');
         Route::post('/forgot-password', 'Auth\AuthController@forgetPassowrd')->name('password.email');
