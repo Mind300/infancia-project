@@ -23,7 +23,7 @@ class ResetPassword extends FormRequest
     {
         return [
             'token' => 'required',
-            'email' => 'required|email:filter|exists:users,email',
+            'email' => 'required|email:filter',
             'password' => 'required|min:8|confirmed'
         ];
     }
