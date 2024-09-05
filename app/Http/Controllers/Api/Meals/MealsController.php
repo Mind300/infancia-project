@@ -23,7 +23,7 @@ class MealsController extends Controller
         $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
 
         $this->middleware(['permission:Meals']);
-        $this->middleware(['role:nursery-Owner']);
+        $this->middleware(['role:nursery_Owner']);
         $this->middleware(['role:teacher'], ['only' => ['index', 'show','store', 'edit', 'update', 'destroy']]);
         $this->middleware(['role:parent'], ['only' => ['index', 'show']]);
     }

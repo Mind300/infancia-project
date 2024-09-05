@@ -20,7 +20,7 @@ class SubjectsController extends Controller
     public function __construct()
     {
         $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
-        $this->middleware(['role:nursery-Owner']);
+        $this->middleware(['role:nursery_Owner']);
         $this->middleware(['permission:Manage-Classes']);
         $this->middleware(['role:teacher'], ['only' => ['index', 'show', 'classSubject']]);
     }
