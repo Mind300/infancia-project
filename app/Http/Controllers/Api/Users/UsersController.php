@@ -24,14 +24,7 @@ class UsersController extends Controller
     {
         $this->nursery_id = auth()->user()->nursery->id ?? null;
         $this->user_id = auth()->user()->id;
-
-        // $this->middleware(['role:AdminRole']);
-        // $this->middleware(['role:Employee'], ['only' => ['store', 'update']]);
-
-        // $this->middleware(['permission:users-create'], ['only' => ['store']]);
-        // $this->middleware(['permission:users-read'], ['only' => ['index', 'show']]);
-        // $this->middleware(['permission:users-update'], ['only' => ['edit', 'update']]);
-        // $this->middleware(['permission:users-delete'], ['only' => ['destroy']]);
+        // $this->middleware(['role:nursery_Owner|superAdmin']);
     }
 
     // Display a listing of the resource.
@@ -47,7 +40,6 @@ class UsersController extends Controller
 
         try {
             $user = User::create($request->validated());
-
             $team = Team::where('name', auth()->user()->nursery->name . 'Team' ?? auth()->user()->name . 'Team')->first();
             $role = Role::where('name', $request->safe()->only('role'))->where('team_id', $team->id)->first();
 

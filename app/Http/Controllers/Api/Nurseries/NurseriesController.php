@@ -30,7 +30,7 @@ class NurseriesController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? null;
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id ?? null;
     }
 
     /**
@@ -127,18 +127,22 @@ class NurseriesController extends Controller
         $paymobCallback = $paymob->callback($request->validated('transaction_id'));
         if ($paymobCallback['success'] === true) {
             self::$creatingNursery = true;
-            $nursery = Nurseries::firstWhere('email', $paymobCallback['order']['shipping_data']['email']);
+            $nursery = Nurseries::firstWhere('email', 'khaledmoussa202@gmail.com');
             $user = User::create($nursery->toArray());
             $token = Password::createToken($user);
+            $nursery->update(['user_id' => $user->id]);
 
-            $team = Team::create(['name' => $nursery->name . 'Team']);
             $role = Role::where('name', 'nursery_Owner')->first();
-            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
+            $team = Team::create(['name' => $nursery->name . 'Team']);
+
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
-            $user->syncRoles([$teacher], $team);
+
+            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
+            $user->syncRoles([$role], $team);
 
             $nursery->notify(new paymentSuccessNotification($token));
+
             DB::commit();
             return messageResponse('Nursery Approved Successfully');
         } else {

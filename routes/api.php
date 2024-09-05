@@ -105,7 +105,7 @@ Route::post('payment-request/paid/{payment_req_id}', 'PaymentRequest\PaymentRequ
 // Parent Request Resource
 Route::apiResource('/parent', 'Parent\ParentController');
 // Users
-Route::group(['middleware' => 'permission:users-create, users-read, users-update, users-delete', 'prefix' => 'accounts'], function () {
+Route::group(['prefix' => 'accounts'], function () {
     Route::apiResource('users', 'Users\UsersController');
     Route::post('users/{user}', 'Users\UsersController@update')->name('users.update');
 });;
