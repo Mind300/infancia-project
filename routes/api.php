@@ -20,6 +20,8 @@ Route::group(['middleware' => 'api'], function () {
     Route::group(['prefix' => 'auth'], function () {
         Route::post('login', 'Auth\AuthController@login');
         Route::post('register', 'Auth\AuthController@register');
+        Route::post('otp/send', 'Auth\AuthController@otpSend');
+        Route::post('otp/check', 'Auth\AuthController@otpCheck');
         Route::post('/forgot-password', 'Auth\AuthController@forgetPassowrd')->name('password.email');
         Route::post('/reset-password', 'Auth\AuthController@resetPassword')->name('password.reset');
 
@@ -35,19 +37,20 @@ Route::group(['middleware' => 'api'], function () {
 
 // ======================= Guest User ========================= //
 Route::group(['prefix' => 'guest'], function () {
-    // Nurseris
+    // Nurseries
     Route::apiResource('nurseries', 'Guest\GuestController');
 });
 
+
 // ===================== SuperAdmin User ====================== //
-// Users
-Route::group(['middleware' => ['auth:api']], function () {
-    Route::group(['prefix' => 'accounts'], function () {
-        Route::apiResource('users', 'Users\UsersController');
-        Route::post('users/{user}', 'Users\UsersController@update')->name('users.update');
-    });
+Route::post('nursery-set-status', 'Nurseries\NurseriesController@nurserySetStatus');
+Route::group(['middleware' => 'role:superAdmin'], function () {
+    // Nursery Approved && Nursery Status
+    // Roles
+    Route::apiResource('roles', 'Roles\RoleController');
 });
 
+// ============== Nursery, Teacher, Parent Users =============== //
 // Nurseris
 Route::apiResource('nurseries', 'Nurseries\NurseriesController');
 Route::get('all-nurseries/{status}', 'Nurseries\NurseriesController@index')->name('nurseries.index');
@@ -56,8 +59,7 @@ Route::apiResource('nursery-album', 'Nurseries\GalleryController');
 Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
 Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
 Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\GalleryController@deletePhoto');
-Route::post('nursery-approve', 'Nurseries\NurseriesController@nurseryAprrove');
-
+Route::post('nursery-approved', 'Nurseries\NurseriesController@nurseryApproved');
 // Reviews Resource
 Route::apiResource('/reviews', 'Nurseries\ReviewsController');
 Route::get('/reviews-nursery/{nursery_id}', 'Nurseries\ReviewsController@index');
@@ -65,56 +67,48 @@ Route::get('/reviews-nursery/{nursery_id}', 'Nurseries\ReviewsController@index')
 Route::apiResource('/faq', 'Nurseries\FaqController');
 Route::apiResource('/schedules', 'Schedules\SchedulesController');
 Route::get('/schedules/{class_id}/{day}', 'Schedules\SchedulesController@show');
-
 // Policies
 Route::apiResource('policies', 'Nurseries\PolicyController');
-
 // Roles
 Route::apiResource('roles', 'Roles\RoleController');
+// Classes Resource
+Route::apiResource('classes', 'Classes\ClassesController');
+Route::post('classTest', 'Classes\ClassesController@test');
+Route::get('kidsclass/{date}/{class_id}', 'Classes\ClassesController@kidsClassFetch');
+Route::post('absent', 'Classes\ClassesController@absent');
+// Kids Resource
+Route::apiResource('kids', 'Kids\KidsController');
+Route::post('kids/{kid}', 'Kids\KidsController@update')->name('kids.update');
+Route::get('birthday/{accessMonth}', 'Kids\KidsController@birthdayKids');
+// Subjects Resource
+Route::apiResource('subjects', 'Subjects\SubjectsController');
+Route::get('classes-subject/{id}', 'Subjects\SubjectsController@classSubject');
+Route::post('assign-subject', 'Subjects\SubjectsController@assignSubject');
+Route::delete('remove-subject/{assign_id}', 'Subjects\SubjectsController@removeSubject');
+// Meals Resource
+Route::apiResource('meals', 'Meals\MealsController');
+// Follow-Up Resource
+Route::apiResource('followup', 'FollowUp\FollowUpController');
+Route::get('followup/{kid_id}/{date}', 'FollowUp\FollowUpController@show');
+// Newletters Resource
+Route::apiResource('newsletters', 'Newsletters\NewslettersController');
+Route::post('newsletters/likeOrUnlike', 'Newsletters\NewslettersController@likeOrUnlike');
+// Parent Request Resource
+Route::get('/chat/{receiver}', 'ParentRequests\MessagesController@chatForm');
+Route::post('/chat/send-message', 'ParentRequests\MessagesController@sendMessage');
+Route::get('/chat/get-request/{nursery_id}', 'ParentRequests\MessagesController@getChatRequest');
+Route::post('/chat/closed-chat/{chat_id}', 'ParentRequests\MessagesController@closedChat');
+// Payment Request
+Route::apiResource('payment-request', 'PaymentRequest\PaymentRequestController');
+Route::post('payment-request/paid/{payment_req_id}', 'PaymentRequest\PaymentRequestController@makrPaied');
+// Parent Request Resource
+Route::apiResource('/parent', 'Parent\ParentController');
+// Users
+Route::group(['middleware' => 'permission:users-create, users-read, users-update, users-delete', 'prefix' => 'accounts'], function () {
+    Route::apiResource('users', 'Users\UsersController');
+    Route::post('users/{user}', 'Users\UsersController@update')->name('users.update');
+});;
 
-// ============= Nursery User & Related Employees ============= //
-Route::group(['middleware' => ['auth:api']], function () {
-    // Classes Resource
-    Route::apiResource('classes', 'Classes\ClassesController');
-    Route::post('classTest', 'Classes\ClassesController@test');
-    Route::get('kidsclass/{date}/{class_id}', 'Classes\ClassesController@kidsClassFetch');
-    Route::post('absent', 'Classes\ClassesController@absent');
-
-    // Kids Resource
-    Route::apiResource('kids', 'Kids\KidsController');
-    Route::post('kids/{kid}', 'Kids\KidsController@update')->name('kids.update');
-    Route::get('birthday/{accessMonth}', 'Kids\KidsController@birthdayKids');
-
-    // Subjects Resource
-    Route::apiResource('subjects', 'Subjects\SubjectsController');
-    Route::get('classes-subject/{id}', 'Subjects\SubjectsController@classSubject');
-    Route::post('assign-subject', 'Subjects\SubjectsController@assignSubject');
-    Route::delete('remove-subject/{assign_id}', 'Subjects\SubjectsController@removeSubject');
-
-    // Meals Resource
-    Route::apiResource('meals', 'Meals\MealsController');
-
-    // Follow-Up Resource
-    Route::apiResource('followup', 'FollowUp\FollowUpController');
-    Route::get('followup/{kid_id}/{date}', 'FollowUp\FollowUpController@show');
-
-    // Newletters Resource
-    Route::apiResource('newsletters', 'Newsletters\NewslettersController');
-    Route::post('newsletters/likeOrUnlike', 'Newsletters\NewslettersController@likeOrUnlike');
-
-    // Parent Request Resource
-    Route::get('/chat/{receiver}', 'ParentRequests\MessagesController@chatForm');
-    Route::post('/chat/send-message', 'ParentRequests\MessagesController@sendMessage');
-    Route::get('/chat/get-request/{nursery_id}', 'ParentRequests\MessagesController@getChatRequest');
-    Route::post('/chat/closed-chat/{chat_id}', 'ParentRequests\MessagesController@closedChat');
-
-    // Payment Request
-    Route::apiResource('payment-request', 'PaymentRequest\PaymentRequestController');
-    Route::post('payment-request/paid/{payment_req_id}', 'PaymentRequest\PaymentRequestController@makrPaied');
-
-    // Parent Request Resource
-    Route::apiResource('/parent', 'Parent\ParentController');
-});
-
+// ============= Routes Test ============= //
 Route::get('/sendmail', [Controller::class, 'demoMail']);
-    
+Route::post('/callback', 'Payments\PaymentController@callback');

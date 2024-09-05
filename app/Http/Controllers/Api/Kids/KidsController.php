@@ -28,7 +28,10 @@ class KidsController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id;
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
+
+        $this->middleware(['role:Manage-Classes']);
+        $this->middleware(['role:teacher|parent'], ['only' => ['index', 'show', 'birthdayKids']]);
     }
 
     /**
@@ -46,7 +49,6 @@ class KidsController extends Controller
 
         return contentResponse($kidsWithMedia, fetchAll('Kids'));
     }
-
 
     /**
      * Store a newly created resource in storage.

@@ -4,15 +4,16 @@ namespace App\Http\Controllers\Api\Nurseries;
 
 use App\Http\Controllers\Api\Payments\PaymentController;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Nurseries\ApproveNursery;
+use App\Http\Requests\Nurseries\NurseryApprovedRequest;
+use App\Http\Requests\Nurseries\NurseryStatusRequest;
 use App\Http\Requests\Nursery\CreateNursery;
 use App\Models\Employee;
 use App\Models\Nurseries;
 use App\Models\User;
 use App\Notifications\ApproveNotification;
+use App\Notifications\paymentSuccessNotification;
 use App\Notifications\RegitserNotification;
 use App\Notifications\RejectedNotification;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 use Laratrust\Models\Role;
@@ -48,7 +49,6 @@ class NurseriesController extends Controller
     {
         DB::beginTransaction();
         try {
-
             $nursery = Nurseries::create($request->validated());
             if ($request->has('media')) {
                 $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
@@ -76,56 +76,76 @@ class NurseriesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function nurseryAprrove(ApproveNursery $request)
+    public function update(CreateNursery $request, Nurseries $nursery)
     {
         DB::beginTransaction();
         try {
-            // Set the context flag
-            self::$creatingNursery = true;
-
-            $nursery = Nurseries::findOrFail($request->validated('nursery_id'));
-
-            $user = User::create($nursery->toArray());
-            $token = Password::createToken($user);
-
-            $nursery->update(['status' => $request->validated('status'), 'user_id' => $user->id]);
-
-            $team = Team::create(['name' => $user->name . 'Team']);
-            $role = Role::where('name', 'nursery_Owner')->first();
-            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
-            
-            $user->addRole($role, $team);
-            $user->syncRoles([$role], $team);
-            $user->syncRoles([$teacher], $team);
-
-            if ($request->validated('status') === 'accepted') {
-                $user->notify(new ApproveNotification($nursery, $token, $request->validated('status')));
-            } else {
-                $user->notify(new RejectedNotification());
+            $nursery->update($request->validated());
+            if ($request->has('media')) {
+                $nursery->addMediaFromRequest('media')->toMediaCollection('Nurseries');
             }
-
             DB::commit();
-            return messageResponse('Created Nursery Approve Successfully');
+            return messageResponse('Success, Nursery Updated Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();
             return messageResponse($error->getMessage(), 403);
         }
     }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Nurseries $nursery)
+    {
+        $nursery->forceDelete();
+        return messageResponse('Nursery Deleted Successfully');
+    }
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function nurserySetStatus(NurseryStatusRequest $request)
+    {
+        try {
+            $nursery = Nurseries::findOrFail($request->validated('nursery_id'));
+            if ($request->validated('status') === 'accepted') {
+                $nursery->notify(new ApproveNotification($nursery));
+            } else {
+                $nursery->notify(new RejectedNotification($nursery));
+            }
+            return messageResponse('Nursery Is ' . $request->validated('status'));
+        } catch (\Throwable $error) {
+            return messageResponse($error->getMessage(), 403);
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function nurseryApproved(NurseryApprovedRequest $request)
+    {
+        $paymob = new PaymentController();
+        $paymobCallback = $paymob->callback($request->validated('transaction_id'));
+        if ($paymobCallback['success'] === true) {
+            self::$creatingNursery = true;
+            $nursery = Nurseries::firstWhere('email', $paymobCallback['order']['shipping_data']['email']);
+            $user = User::create($nursery->toArray());
+            $token = Password::createToken($user);
+
+            $team = Team::create(['name' => $nursery->name . 'Team']);
+            $role = Role::where('name', 'nursery_Owner')->first();
+            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
+            $user->addRole($role, $team);
+            $user->syncRoles([$role], $team);
+            $user->syncRoles([$teacher], $team);
+
+            $nursery->notify(new paymentSuccessNotification($token));
+            DB::commit();
+            return messageResponse('Nursery Approved Successfully');
+        } else {
+            return messageResponse('Failed, Error Occured During Payment, Try Again..!', 403);
+        }
+    }
+
 
     // Display a listing of the resource.
     public function nurseryUsers()

@@ -21,14 +21,15 @@ class CreateNursery extends FormRequest
      */
     public function rules(): array
     {
+        $nursery_id = auth()->user()->nurery->id ?? null;
         return [
             'media' => 'nullable|image',
             'name' => 'required|string|min:3|max:50',
-            'email' => 'required|email:filter|unique:users,email',
-            'phone' => 'required|string|unique:users,phone',
-            'country' => 'required|string', 
-            'city' => 'required|string',
-            'province' => 'nullable|string',
+            'email' => 'required|email:filter|unique:users,email|unique:nurseries,email,' . $nursery_id,
+            'phone' => 'required|string|unique:users,phone|unique:nurseries,phone',
+            'country' => 'sometimes|string', 
+            'city' => 'sometimes|string',
+            'province' => 'sometimes|string',
             'address' => 'required|string',
             'branches_number' => 'required|integer',
             'start_fees' => 'nullable',

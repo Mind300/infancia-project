@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
-// Controller
+// Controller   
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\CheckEmailRequest;
+use App\Http\Requests\Auth\CheckOTPRequest;
 use App\Http\Requests\Auth\ForgetPassword;
 // Requests
 use App\Http\Requests\Auth\LoginRequest;
@@ -12,6 +14,9 @@ use App\Http\Requests\Auth\ResetPassword;
 use Illuminate\Support\Facades\Password;
 // Models
 use App\Models\User;
+use App\Notifications\VerifyEmailNotification;
+use Ichtrojan\Otp\Otp;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -44,10 +49,10 @@ class AuthController extends Controller
                 'permissions' => $role->permissions->pluck('name'), // Extract permission names
             ];
         });
-    
+
         return response()->json($rolesWithPermissions);
     }
-    
+
 
     // Log the user out (Invalidate the token).
     public function logout()
@@ -77,5 +82,27 @@ class AuthController extends Controller
     {
         $token = auth()->refresh();
         return response()->json(['token' => $token]);
+    }
+
+    // Email Check.
+    public function emailCheck(CheckEmailRequest $request)
+    {
+        $user = User::where('email', $request->validated('email'));
+        return $user ? messageResponse() : messageResponse('Failed, Email not found..!', 404);
+    }
+
+    // Send OTP.
+    public function otpSend(Request $request)
+    {
+        $user = User::firstWhere('email', $request->email);
+        $user->notify(new VerifyEmailNotification());
+        return messageResponse('OTP Send Successfully');
+    }
+
+    // Check OTP.
+    public function otpCheck(CheckOTPRequest $request)
+    {
+        $checkOtp = (new Otp)->validate($request->validated('email'), $request->validated('code'));
+        return $checkOtp->status ? messageResponse('OTP Send Successfully') : messageResponse('Failed, ' . $checkOtp->message, 404);
     }
 }

@@ -15,14 +15,17 @@ class ClassesController extends Controller
 {
     // Variables
     private $nursery_id;
-    
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id;
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
+        $this->middleware(['permission:Manage-Classes']);
+        $this->middleware(['role:nursery-Owner']);
+        $this->middleware(['role:teacher'], ['only' => ['index', 'show', 'kidsClassFetch', 'absent']]);
+        $this->middleware(['role:parent'], ['only' => ['kidsClassFetch']]);
     }
 
     /**
@@ -41,7 +44,6 @@ class ClassesController extends Controller
     {
         $data = $request->validated();
         $data['nursery_id'] = $this->nursery_id;
-
         Classes::create($data);
         return messageResponse('Created Class Successfully');
     }
@@ -52,14 +54,14 @@ class ClassesController extends Controller
     public function show(string $id)
     {
         $class = Classes::with('kids')->where('nursery_id', $this->nursery_id)->findOrFail($id);
-    
+
         foreach ($class->kids as $kid) {
             $kid->media = $kid->getMedia();
         }
-    
+
         return contentResponse($class, fetchOne($class->name));
     }
-    
+
     /**
      * Show the form for editing the specified class.
      */
@@ -75,7 +77,6 @@ class ClassesController extends Controller
     public function update(ClassesRequest $request, Classes $class)
     {
         $data = $request->validated();
-
         $class->update($data);
         return messageResponse('Updated Class Successfully');
     }
@@ -98,7 +99,7 @@ class ClassesController extends Controller
         $day = $date->shortDayName; // Gets the short name of the day (e.g., "Mon" for Monday)
 
         $kids = Kids::select('id', 'kid_name')->with([
-            'absent' => function ($query) use ($date){
+            'absent' => function ($query) use ($date) {
                 $query->select('kid_id', 'absent', 'created_at')->whereDate('created_at', $date); // Make sure to include created_at if you need to filter by it later
             },
             'meal_amount' => function ($query) use ($date, $day) {
@@ -111,9 +112,7 @@ class ClassesController extends Controller
                 $query->whereDate('created_at', $date);
             }
         ])->where('class_id', $class_id)->get();
-
         $mealsClass = Meals::where('class_id', $class_id)->where('days', $day)->get();
-
         $kids = $kids->map(function ($kid) use ($date, $mealsClass) {
             $absence = $kid->absent;
             return [

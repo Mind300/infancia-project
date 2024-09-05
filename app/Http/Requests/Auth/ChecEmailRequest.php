@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Nurseries;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApproveNursery extends FormRequest
+class ChecEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,7 +22,7 @@ class ApproveNursery extends FormRequest
     public function rules(): array
     {
         return [
-            'transaction_id' => 'required|numeric',
+            //
         ];
     }
 }

@@ -20,7 +20,12 @@ class MealsController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id;
+        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
+
+        $this->middleware(['permission:Meals']);
+        $this->middleware(['role:nursery-Owner']);
+        $this->middleware(['role:teacher'], ['only' => ['index', 'show','store', 'edit', 'update', 'destroy']]);
+        $this->middleware(['role:parent'], ['only' => ['index', 'show']]);
     }
 
     /**
@@ -41,7 +46,7 @@ class MealsController extends Controller
         $requestValidated = $request->validated();
 
         $meals = Meals::where('class_id', $requestValidated['class_id'])->whereDate('created_at', $date)->get();
-        
+
         // Process meal amounts
         foreach ($requestValidated['meals'] as $meal) {
             $existingMeal = $meals->where('days', $meal['days'])->where('type', $meal['type'])->first();

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\ParentRequests;
 use App\Events\ChatSent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ParentRequest\MessageRequest;
-use App\Http\Requests\PaymentRequest\ChatsRequest;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\User;
@@ -13,16 +12,30 @@ use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
-   public function chatForm(string $receiver)
+    // Variables
+    private $nursery_id;
+
+    /**
+     * Construct a instance of the resource.
+     */
+    public function __construct()
+    {
+        $this->nursery_id = auth()->user()->nursery->id;
+        $this->middleware(['role:nursery-Owner']);
+        $this->middleware(['permission:Parent-Request']);
+        $this->middleware(['role:parent']);
+    }
+
+    public function chatForm(string $receiver)
     {
         $sender = auth()->user()->nursery->id ?? auth()->user()->id;
-        
+
         $chats = Message::where(function ($query) use ($sender, $receiver) {
             $query->where('sender', $sender)
-            ->where('receiver', $receiver);
+                ->where('receiver', $receiver);
         })->orWhere(function ($query) use ($sender, $receiver) {
             $query->where('sender', $receiver)
-            ->where('receiver', $sender);
+                ->where('receiver', $sender);
         })->orderBy('created_at', 'asc')->get();
 
         return response()->json(['content' => $chats]);
@@ -44,9 +57,9 @@ class MessagesController extends Controller
 
         $message =  Message::create($data);
         $receiver = User::find($data['receiver']);
-        
+
         broadcast(new ChatSent($receiver, $message))->toOthers();
-        
+
         return contentResponse($message, 'Send Message Successfully');
     }
 
@@ -56,9 +69,9 @@ class MessagesController extends Controller
         return contentResponse($chats, 'Fetch Chats Request Successfully');
     }
 
-    public function closedChat(string $id)
+    public function closedChat(string $chat_id)
     {
-        $chat = Chat::find($id);
+        $chat = Chat::find($chat_id);
         $chat->update(['closed' => 1, 'closed_at' => Carbon::today()]);
         return messageResponse('Closed Chat Successfully');
     }

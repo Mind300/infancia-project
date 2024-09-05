@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Nurseries;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApproveNursery extends FormRequest
+class CheckOTPRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class ApproveNursery extends FormRequest
     public function rules(): array
     {
         return [
-            'transaction_id' => 'required|numeric',
+            'email' => 'required|email:filter|exists:users,email',
+            'code' => 'required|numeric|min:4'
         ];
     }
 }

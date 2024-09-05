@@ -4,7 +4,7 @@ namespace App\Http\Requests\Nurseries;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApproveNursery extends FormRequest
+class NurseryStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,8 @@ class ApproveNursery extends FormRequest
     public function rules(): array
     {
         return [
-            'transaction_id' => 'required|numeric',
+            'nursery_id' => 'required|integer|exists:nurseries,id',
+            'status' => 'required|string|in:accepted,rejected'
         ];
     }
 }

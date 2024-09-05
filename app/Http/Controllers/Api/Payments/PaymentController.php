@@ -6,10 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Nurseries;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-    public function __construct(public $nursery)
+    public function __construct(public $nursery = null)
     {
         $this->nursery = $nursery;
     }
@@ -92,51 +93,16 @@ class PaymentController extends Controller
         return $response->json('token');
     }
 
-    public function callback(Request $request)
+    public function callback($transaction_id)
     {
-        $data = $request->all();
-        ksort($data);
+        $tokenResponse = $this->paymentConfig();
+        $token = $tokenResponse['token'];
+        $response = Http::withHeaders(['Authorization' => "Bearer $token",])->get("https://accept.paymob.com/api/acceptance/transactions/{$transaction_id}");
 
-        $hmac = $data['hmac'];
-        $array = [
-            'amount_cents',
-            'created_at',
-            'currency',
-            'error_occured',
-            'has_parent_transaction',
-            'id',
-            'integration_id',
-            'is_3d_secure',
-            'is_auth',
-            'is_capture',
-            'is_refunded',
-            'is_standalone_payment',
-            'is_voided',
-            'order',
-            'owner',
-            'pending',
-            'source_data_pan',
-            'source_data_sub_type',
-            'source_data_type',
-            'success',
-        ];
-
-        $connectedString = '';
-        foreach ($array as $key) {
-            if (isset($data[$key])) {
-                $connectedString .= $data[$key];
-            }
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return $response->json();
         }
-
-        $secret = env('PAYMOB_HMAC');
-        $hashed = hash_hmac('SHA512', $connectedString, $secret);
-
-        if ($hashed === $hmac) {
-            echo "secure";
-            exit;
-        }
-
-        echo 'not secure';
-        exit;
     }
 }

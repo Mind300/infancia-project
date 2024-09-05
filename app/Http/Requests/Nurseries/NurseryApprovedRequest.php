@@ -4,7 +4,7 @@ namespace App\Http\Requests\Nurseries;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApproveNursery extends FormRequest
+class NurseryApprovedRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
