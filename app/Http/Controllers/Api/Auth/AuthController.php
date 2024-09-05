@@ -74,6 +74,7 @@ class AuthController extends Controller
         $status = Password::reset($request->validated(), function (User $user, string $password) {
             $user->update(['password' => $password]);
         });
+        return $status;
         return $status === Password::PASSWORD_RESET ? messageResponse('Password Reset Successfully') : messageResponse('Failed, Error occured when reseting password', 403);
     }
 
