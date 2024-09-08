@@ -23,7 +23,8 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('check/email', 'Auth\AuthController@checkEmail');
         Route::post('otp/send', 'Auth\AuthController@otpSend');
         Route::post('otp/check', 'Auth\AuthController@otpCheck');
-        Route::post('/forgot-password', 'Auth\AuthController@forgetPassowrd')->name('password.email');
+        Route::post('/forgot-password', 'Auth\AuthController@forgetPassword')->name('password.email');
+        Route::post('/forgot-password-app', 'Auth\AuthController@forgetPasswordApp')->name('password.email');
         Route::post('/reset-password', 'Auth\AuthController@resetPassword')->name('password.reset');
 
         // Authentication Must User Login

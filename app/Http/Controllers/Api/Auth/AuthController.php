@@ -61,10 +61,21 @@ class AuthController extends Controller
     }
 
     // Forget Password
-    public function forgetPassowrd(ForgetPassword $request)
+    public function forgetPassword(ForgetPassword $request)
     {
         $status = Password::sendResetLink($request->validated());
         return $status === Password::RESET_LINK_SENT ? messageResponse('Reset Link Send Successfully') : messageResponse($status, 429);
+    }
+
+    public function forgetPasswordApp(ForgetPassword $request)
+    {
+        $status = Password::sendResetLink($request->validated());
+        if ($status === Password::RESET_LINK_SENT) {
+            $user = User::firstWhere('email', $request->validated('email'));
+            $token = Password::createToken($user);
+            return contentResponse($token, 'Reset Link Sent Successfully');
+        }
+        return messageResponse($status, 429);
     }
 
     // Reset Password
@@ -102,6 +113,6 @@ class AuthController extends Controller
     public function otpCheck(CheckOTPRequest $request)
     {
         $checkOtp = (new Otp)->validate($request->validated('email'), $request->validated('code'));
-        return $checkOtp->status ? messageResponse('OTP Valid Successfully') : messageResponse('Failed, ' . $checkOtp->message, 404);
+        return $checkOtp->status ? messageResponse('OTP Send Successfully') : messageResponse('Failed, ' . $checkOtp->message, 404);
     }
 }
