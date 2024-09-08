@@ -102,6 +102,6 @@ class AuthController extends Controller
     public function otpCheck(CheckOTPRequest $request)
     {
         $checkOtp = (new Otp)->validate($request->validated('email'), $request->validated('code'));
-        return $checkOtp->status ? messageResponse('OTP Send Successfully') : messageResponse('Failed, ' . $checkOtp->message, 404);
+        return $checkOtp->status ? messageResponse('OTP Valid Successfully') : messageResponse('Failed, ' . $checkOtp->message, 404);
     }
 }

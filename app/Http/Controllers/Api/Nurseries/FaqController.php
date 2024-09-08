@@ -14,7 +14,7 @@ class FaqController extends Controller
     public function __construct()
     {
         $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
-        // $this->middleware(['role:nursery_Owner']);
+        $this->middleware(['role:nursery_Owner|teacher|parent|permission:Faq']);
     }
     /**
      * Display a listing of the resource.

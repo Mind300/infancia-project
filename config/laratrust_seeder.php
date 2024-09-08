@@ -12,44 +12,37 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
-
         'superAdmin' => [
-            'users' => 'c,r,u,d',
-            'roles' => 'c,r,u,d',
-            'nurseries' => 'c,r,u,d',
+            'Roles' => true,
+            'Nursery-Approved' => true,
+            'Nursery-SetStatus' => true,
         ],
 
         'nursery_Owner' => [
-            'employee' => 'c,r,u,d',
-            'classes' => 'c,r,u,d',
-            'kids' => 'c,r,u,d',
-            'followup' => 'c,r,u,d',
-            'subject' => 'c,r,u,d',
-            'schedule' => 'c,r,u,d',
-            'roles' => 'c,r,u,d',
-            'branches' => 'c,r,u,d',
+            'Nursery-Profile' => true,
+            'Manage-Classes' => true,
+            'Meal' => true,
+            'NewsLetter' => true,
+            'Parent-Request' => true,
+            'Payment-History' => true,
+            'Payment-Request' => true,
+            'Nursery-Policy' => true,
+            'Roles' => true,
+            'Faq' => true,
         ],
 
-        'nursery_Admin' => [
-            'employee' => 'c,r,u,d',
-            'classes' => 'c,r,u,d',
-            'kids' => 'c,r,u,d',
-            'followup' => 'c,r,u,d',
-            'subject' => 'c,r,u,d',
-            'schedule' => 'c,r,u,d',
-            'roles' => 'c,r,u,d',
-        ],
-        
         'parent' => [
-            'users' => 'r',
+            'Meal' => true,
+            'NewsLetter' => true,
+            'Parent-Request' => true,
+            'Payment-Request' => true,
+            'Nursery-Policy' => true,
+            'Faq' => true,
         ],
-
     ],
 
     'permissions_map' => [
-        'c' => 'create',
-        'r' => 'read',
-        'u' => 'update',
-        'd' => 'delete',
+        'true' => 'access',
+        'false' => 'no access',
     ],
 ];

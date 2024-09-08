@@ -21,8 +21,7 @@ class MessagesController extends Controller
     public function __construct()
     {
         $this->nursery_id = auth()->user()->nursery->id;
-        // $this->middleware(['role:nursery_Owner|parent']);
-        // $this->middleware(['permission:Parent-Request']);
+        $this->middleware(['role:nursery_Owner|parent']);
     }
 
     public function chatForm(string $receiver)

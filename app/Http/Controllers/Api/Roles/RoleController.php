@@ -10,16 +10,9 @@ use Laratrust\Models\Team;
 
 class RoleController extends Controller
 {
-
     public function __construct()
     {
-        // $this->middleware(['role:AdminRole']);
-        // $this->middleware(['role:Employee'], ['only' => ['store', 'update']]);
-
-        // $this->middleware(['permission:roles-create'], ['only' => ['store']]);
-        // $this->middleware(['permission:roles-read'], ['only' => ['index', 'show']]);
-        // $this->middleware(['permission:roles-update'], ['only' => ['edit', 'update']]);
-        // $this->middleware(['permission:roles-delete'], ['only' => ['destroy']]);
+        $this->middleware(['role:nursery_Owner|superAdmin|permission:Roles']);
     }
 
     /**

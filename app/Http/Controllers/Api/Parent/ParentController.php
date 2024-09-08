@@ -17,7 +17,7 @@ class ParentController extends Controller
     public function __construct()
     {
         $this->user_id = auth()->user()->id;
-        // $this->middleware(['role:parent']);
+        $this->middleware(['role:parent']);
     }
 
     /**

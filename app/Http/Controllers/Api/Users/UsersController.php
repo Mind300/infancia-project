@@ -24,7 +24,7 @@ class UsersController extends Controller
     {
         $this->nursery_id = auth()->user()->nursery->id ?? null;
         $this->user_id = auth()->user()->id;
-        // $this->middleware(['role:nursery_Owner|superAdmin']);
+        $this->middleware(['role:nursery_Owner|superAdmin']);
     }
 
     // Display a listing of the resource.
