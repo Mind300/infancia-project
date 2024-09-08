@@ -53,7 +53,6 @@ class AuthController extends Controller
         return response()->json($rolesWithPermissions);
     }
 
-
     // Log the user out (Invalidate the token).
     public function logout()
     {
@@ -88,7 +87,7 @@ class AuthController extends Controller
     public function checkEmail(CheckEmailRequest $request)
     {
         $user = User::firstWhere('email', $request->validated('email'));
-        return $user ? messageResponse() : messageResponse('Failed, Email not found..!', 404);
+        return $user ? messageResponse('Email is already exist') : messageResponse('Failed, Email not found..!', 404);
     }
 
     // Send OTP.
