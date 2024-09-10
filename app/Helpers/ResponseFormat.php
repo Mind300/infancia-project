@@ -70,3 +70,11 @@ if (!function_exists('fetchAll')) {
         return 'Fetches ' . $message . ' Successfully';
     }
 }
+// For Failed Response
+if (!function_exists('nursery_id')) {
+    function nursery_id()
+    {
+        $nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
+        return $nursery_id;
+    }
+}

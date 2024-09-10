@@ -84,7 +84,7 @@ class PaymentController extends Controller
             "expiration" => 3600,
             "order_id" => $order['id'],
             "billing_data" => $billingData,
-            'email' => 'khaledmoussa202@gmail.com',
+            'email' => $this->nursery->email,
             "currency" => "EGP",
             "integration_id" => env('PAYMOB_INTEGRATION_ID')
         ];

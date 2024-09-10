@@ -72,7 +72,7 @@ class PaymentRequestController extends Controller
             return messageResponse('This payment has already been marked as paid');
         }
         $paymentRequest->update(['is_paid' => true, 'paid_at' => Carbon::today()]);
-        
+
         return contentResponse($paymentRequest, fetchOne('Paied Successfully'));
     }
 

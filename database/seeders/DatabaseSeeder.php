@@ -11,9 +11,9 @@ class DatabaseSeeder extends Seeder
             // Permissions Seeder Test
             PermissionsTableSeeder::class,
             // // Admin Seeder Test
-            // UsersTableSeeder::class,
+            UsersTableSeeder::class,
             // // Nursery Seeder Test
-            // NurseriesTableSeeder::class,
+            NurseriesTableSeeder::class,
             // // FAQS Seeder Test
             // FAQsTableSeeder::class,
             // // Policies Seeder Test

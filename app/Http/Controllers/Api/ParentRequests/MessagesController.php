@@ -34,7 +34,7 @@ class MessagesController extends Controller
         })->orWhere(function ($query) use ($sender, $receiver) {
             $query->where('sender', $receiver)
                 ->where('receiver', $sender);
-        })->orderBy('created_at', 'asc')->get();
+        })->orderBy('chat_id', 'asc')->get();
 
         return response()->json(['content' => $chats]);
     }

@@ -13,15 +13,11 @@ use Carbon\Carbon;
 
 class ClassesController extends Controller
 {
-    // Variables
-    private $nursery_id;
-
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|permission:Manage-Classes']);
     }
 
@@ -30,7 +26,7 @@ class ClassesController extends Controller
      */
     public function index()
     {
-        $classes = Classes::where('nursery_id', $this->nursery_id)->get();
+        $classes = Classes::where('nursery_id', nursery_id())->get();
         return contentResponse($classes, 'Fetches Classes Successfully');
     }
 
@@ -40,7 +36,7 @@ class ClassesController extends Controller
     public function store(ClassesRequest $request)
     {
         $data = $request->validated();
-        $data['nursery_id'] = $this->nursery_id;
+        $data['nursery_id'] = nursery_id();
         Classes::create($data);
         return messageResponse('Created Class Successfully');
     }
@@ -50,7 +46,7 @@ class ClassesController extends Controller
      */
     public function show(string $id)
     {
-        $class = Classes::with('kids')->where('nursery_id', $this->nursery_id)->findOrFail($id);
+        $class = Classes::with('kids')->where('nursery_id', nursery_id())->findOrFail($id);
 
         foreach ($class->kids as $kid) {
             $kid->media = $kid->getMedia();
@@ -64,7 +60,7 @@ class ClassesController extends Controller
      */
     public function edit(string $id)
     {
-        $classes = Classes::where('nursery_id', $this->nursery_id)->find($id);
+        $classes = Classes::where('nursery_id', nursery_id())->find($id);
         return contentResponse($classes, fetchOne($classes->name));
     }
 
@@ -133,7 +129,7 @@ class ClassesController extends Controller
     {
         $date = Carbon::today()->format('Y-m-d');
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         $absent = Absence::where('kid_id', $requestValidated['kid_id'])->whereDate('created_at', $date)->first();
 
         if ($absent) {
