@@ -12,16 +12,11 @@ use Illuminate\Support\Facades\DB;
 
 class NewslettersController extends Controller
 {
-    // Variables
-    private $nursery_id;
-    private $user_id;
-
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->user_id = auth()->user()->id;
         $this->middleware(['role:nursery_Owner|teacher|parent|NewsLetter']);
     }
 
@@ -35,7 +30,7 @@ class NewslettersController extends Controller
             'title' => $newsletter->title,
             'description' => $newsletter->description,
             'likes_counts' => $newsletter->likes_counts,
-            'liked' => $newsletter->newslikes->where('user_id', $this->user_id)->where('newsletter_id', $newsletter->id)->first() ? 1 : 0,
+            'liked' => $newsletter->newslikes->where('user_id', user_id())->where('newsletter_id', $newsletter->id)->first() ? 1 : 0,
             'media' => $newsletter->getFirstMedia('Newsletters'),
             'created_at' => $newsletter->created_at,
         ];
@@ -120,10 +115,10 @@ class NewslettersController extends Controller
         DB::beginTransaction();
 
         $requestValidated = $request->validated();
-        $requestValidated['user_id'] = $this->user_id;
+        $requestValidated['user_id'] = user_id();
         try {
             $newsletter = NewsLetters::find($requestValidated['newsletter_id']);
-            $userLike = NewslettersLikes::where('user_id', $this->user_id)->where('newsletter_id', $newsletter->id)->first();
+            $userLike = NewslettersLikes::where('user_id', user_id())->where('newsletter_id', $newsletter->id)->first();
 
             if ($userLike) {
                 $userLike->forceDelete();

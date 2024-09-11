@@ -120,7 +120,7 @@ return [
     |
     */
 
-    'refresh_ttl' => env('JWT_REFRESH_TTL', 3060),
+    'refresh_ttl' => env('JWT_REFRESH_TTL'),
 
     /*
     |--------------------------------------------------------------------------

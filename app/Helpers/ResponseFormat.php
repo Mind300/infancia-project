@@ -78,3 +78,11 @@ if (!function_exists('nursery_id')) {
         return $nursery_id;
     }
 }
+// For Failed Response
+if (!function_exists('user_id')) {
+    function user_id()
+    {
+        $user_id = auth()->user()->id;
+        return $user_id;
+    }
+}
