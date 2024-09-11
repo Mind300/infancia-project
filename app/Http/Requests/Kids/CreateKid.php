@@ -13,7 +13,7 @@ class CreateKid extends FormRequest
     {
         return true;
     }
-    
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -27,7 +27,7 @@ class CreateKid extends FormRequest
             'media' => 'sometimes|image',
             'name' =>  'required|string',
             'email' =>  'required|email:filter',
-            'phone' =>  'required|string|unique:users,phone',
+            'phone' =>  'required|string',
             'city' =>  'required|string',
             'address' =>  'required|string',
 

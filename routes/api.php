@@ -26,12 +26,12 @@ Route::group(['middleware' => 'api'], function () {
         Route::post('/forgot-password', 'Auth\AuthController@forgetPassword')->name('password.email');
         Route::post('/forgot-password-app', 'Auth\AuthController@forgetPasswordApp')->name('password.email');
         Route::post('/reset-password', 'Auth\AuthController@resetPassword')->name('password.reset');
+        Route::post('refresh', 'Auth\AuthController@refresh');
 
         // Authentication Must User Login
         Route::group(['middleware' => 'auth:api'], function () {
             Route::post('me', 'Auth\AuthController@me');
             Route::post('auth-role', 'Auth\AuthController@authRole');
-            Route::post('refresh', 'Auth\AuthController@refresh');
             Route::post('logout', 'Auth\AuthController@logout');
         });
     });
@@ -112,6 +112,3 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('users/{user}', 'Users\UsersController@update')->name('users.update');
     });;
 });
-// ============= Routes Test ============= //
-Route::get('/sendmail', [Controller::class, 'demoMail']);
-Route::post('/callback', 'Payments\PaymentController@callback');

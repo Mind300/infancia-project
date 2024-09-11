@@ -20,7 +20,6 @@ use Laratrust\Models\Team;
 class KidsController extends Controller
 {
     // Variables
-    private $nursery_id;
     public static $creatingKid = false;
 
     /**
@@ -28,7 +27,6 @@ class KidsController extends Controller
      */
     public function __construct()
     {
-        // $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['auth:api|role:nursery_Owner|teacher|parent|permission:Manage-Classes']);
     }
 
