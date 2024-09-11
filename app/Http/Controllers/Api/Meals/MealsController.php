@@ -20,7 +20,6 @@ class MealsController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|parent|Meal']);
     }
 
@@ -29,7 +28,7 @@ class MealsController extends Controller
      */
     public function index()
     {
-        $classesMeals = Classes::where('nursery_id', $this->nursery_id)->with('meals')->get();
+        $classesMeals = Classes::where('nursery_id', nursery_id())->with('meals')->get();
         return contentResponse($classesMeals, fetchAll('Meals'));
     }
 
@@ -63,7 +62,7 @@ class MealsController extends Controller
      */
     public function show($id)
     {
-        $classMeals = Classes::where('nursery_id', $this->nursery_id)->with('meals')->find($id);
+        $classMeals = Classes::where('nursery_id', nursery_id())->with('meals')->find($id);
         return contentResponse($classMeals, fetchOne($classMeals->type));
     }
 

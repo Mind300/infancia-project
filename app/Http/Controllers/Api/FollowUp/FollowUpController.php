@@ -22,7 +22,6 @@ class FollowUpController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|parent|permission:Manage-Classes']);
     }
 
@@ -38,7 +37,7 @@ class FollowUpController extends Controller
 
             // Validate the request and add Nursery Id
             $validatedRequest = $request->validated();
-            $validatedRequest['nursery_id'] = $this->nursery_id;
+            $validatedRequest['nursery_id'] = nursery_id();
 
             // Fetch activity and meal amounts for today
             $kidId = $validatedRequest['kid_id'];
@@ -61,14 +60,14 @@ class FollowUpController extends Controller
                         $existingMeal->update($meal);
                     } else {
                         $meal['kid_id'] = $kidId; // Add kid_id to each meal
-                        $meal['nursery_id'] = $this->nursery_id; // Add nursery_id to each meal
+                        $meal['nursery_id'] = nursery_id(); // Add nursery_id to each meal
                         MealAmounts::create($meal);
                     }
                 }
             } else {
                 foreach ($validatedRequest['meals'] as $meal) {
                     $meal['kid_id'] = $kidId; // Add kid_id to each meal
-                    $meal['nursery_id'] = $this->nursery_id; // Add nursery_id to each meal
+                    $meal['nursery_id'] = nursery_id(); // Add nursery_id to each meal
                     MealAmounts::create($meal);
                 }
             }

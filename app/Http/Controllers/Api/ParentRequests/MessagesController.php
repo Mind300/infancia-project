@@ -12,15 +12,12 @@ use Carbon\Carbon;
 
 class MessagesController extends Controller
 {
-    // Variables
-    private $nursery_id;
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id;
         $this->middleware(['role:nursery_Owner|parent']);
     }
 

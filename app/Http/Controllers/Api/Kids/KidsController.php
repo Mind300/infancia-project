@@ -37,7 +37,7 @@ class KidsController extends Controller
      */
     public function index()
     {
-        $kids = Kids::where('nursery_id', $this->nursery_id)->get();
+        $kids = Kids::where('nursery_id', nursery_id()())->get();
         $kidsWithMedia = $kids->map(function ($kid) {
             $kid->getFirstMedia('Kids');
             return [
@@ -61,7 +61,7 @@ class KidsController extends Controller
 
             // Add Nursery Id In Request
             $requestValidated = $request->validated();
-            $requestValidated['nursery_id'] = $this->nursery_id;
+            $requestValidated['nursery_id'] = nursery_id();
 
             // Create Kids & (Parents - User)
             $user = User::create($requestValidated);
@@ -173,7 +173,7 @@ class KidsController extends Controller
         }
 
         $today = Carbon::today()->startOfDay();
-        $kidsBirth = Kids::whereMonth('birthdate', $month)->where('nursery_id', $this->nursery_id)->get();
+        $kidsBirth = Kids::whereMonth('birthdate', $month)->where('nursery_id', nursery_id())->get();
 
         $kids = $kidsBirth->map(function ($kid) use ($today) {
             $birthdateKid =  Carbon::parse($kid->birthdate);

@@ -12,14 +12,12 @@ use Illuminate\Support\Facades\DB;
 class SubjectsController extends Controller
 {
     // Variables
-    private $nursery_id;
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|permission:Managae-Classes']);
     }
 
@@ -28,7 +26,7 @@ class SubjectsController extends Controller
      */
     public function index()
     {
-        $subjects = Subjects::where('nursery_id', $this->nursery_id)->get();
+        $subjects = Subjects::where('nursery_id', nursery_id())->get();
         return contentResponse($subjects, fetchAll('Subjects'));
     }
 
@@ -38,7 +36,7 @@ class SubjectsController extends Controller
     public function store(SubjectRequest $request)
     {
         $request = $request->validated();
-        $request['nursery_id'] = $this->nursery_id;
+        $request['nursery_id'] = nursery_id();
 
         Subjects::create($request);
         return messageResponse('Created Subject Successfully');
@@ -49,7 +47,7 @@ class SubjectsController extends Controller
      */
     public function show(Subjects $subject)
     {
-        $subject->where('nursery_id', $this->nursery_id);
+        $subject->where('nursery_id', nursery_id());
         return contentResponse($subject, fetchOne($subject->title . ' Subject'));
     }
 
@@ -85,7 +83,7 @@ class SubjectsController extends Controller
     public function assignSubject(SubjectClass $request)
     {
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
 
         $subjectClass = SubjectsClasses::create($requestValidated);
         return contentResponse($subjectClass, 'Assign Subject To Class Successfully');

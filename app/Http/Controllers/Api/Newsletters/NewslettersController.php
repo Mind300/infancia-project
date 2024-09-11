@@ -21,7 +21,6 @@ class NewslettersController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->user_id = auth()->user()->id;
         $this->middleware(['role:nursery_Owner|teacher|parent|NewsLetter']);
     }
@@ -47,7 +46,7 @@ class NewslettersController extends Controller
      */
     public function index()
     {
-        $newsletters = NewsLetters::where('nursery_id', $this->nursery_id)->get();
+        $newsletters = NewsLetters::where('nursery_id', nursery_id())->get();
         $newsletters = $newsletters->map(function ($newsletter) {
             return $this->data($newsletter);
         });
@@ -61,7 +60,7 @@ class NewslettersController extends Controller
         DB::beginTransaction();
 
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         $requestValidated['title'] = auth()->user()->name;
         try {
             $newsletter = NewsLetters::create($requestValidated);
@@ -91,7 +90,7 @@ class NewslettersController extends Controller
     {
         DB::beginTransaction();
         $requestValidated = $request()->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         try {
             $newsletter->update($requestValidated);
             DB::commit();

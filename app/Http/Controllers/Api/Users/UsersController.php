@@ -16,21 +16,18 @@ use Laratrust\Models\Team;
 class UsersController extends Controller
 {
     private $nursery_id;
-    private $user_id;
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? null;
-        $this->user_id = auth()->user()->id;
         $this->middleware(['role:nursery_Owner|superAdmin']);
     }
 
     // Display a listing of the resource.
     public function index()
     {
-        return contentResponse(Employee::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Successfully');
+        return contentResponse(Employee::where('nursery_id', nursery_id())->with('user')->get(), 'Fetches Users Successfully');
     }
 
     // Store a newly created resource in storage.
@@ -45,15 +42,15 @@ class UsersController extends Controller
 
             $user->addRole($role, $team);
             $user->syncRoles([$role], $team);
-            $data = ['type' => $role->name, 'user_id' => $user->id, 'nursery_id' => $this->nursery_id,];
+            $data = ['type' => $role->name, 'user_id' => $user->id, 'nursery_id' => nursery_id(),];
 
             if ($role->name == 'teacher') {
                 foreach ($request->validated('classes') as $class) {
-                    ManageClass::create(['user_id' => $user->id, 'class_id' => $class['class_id'], 'nursery_id' => $this->nursery_id]);
+                    ManageClass::create(['user_id' => $user->id, 'class_id' => $class['class_id'], 'nursery_id' => nursery_id()]);
                 }
             }
 
-            if ($this->nursery_id) {
+            if (nursery_id()) {
                 Employee::create($data);
             }
 

@@ -19,7 +19,6 @@ class PaymentRequestController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|parent|permission:Payment-Request']);
     }
 
@@ -28,7 +27,7 @@ class PaymentRequestController extends Controller
      */
     public function index()
     {
-        $paymentRequest = PaymentRequest::with('kids.class')->where('nursery_id', $this->nursery_id)->get();
+        $paymentRequest = PaymentRequest::with('kids.class')->where('nursery_id', nursery_id())->get();
         return contentResponse($paymentRequest, fetchAll('All Payment Request'));
     }
 
@@ -39,7 +38,7 @@ class PaymentRequestController extends Controller
     {
         $requestValidated = $request->validated();
         $requestValidated['paid_at'] = Carbon::today();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
 
         // Process meal amounts
         foreach ($requestValidated['kids'] as $meal) {

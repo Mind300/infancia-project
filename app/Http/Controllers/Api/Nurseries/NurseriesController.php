@@ -22,17 +22,13 @@ use Laratrust\Models\Team;
 class NurseriesController extends Controller
 {
     // Variables
-    private $nursery_id;
+    
     public static $creatingNursery = false;
 
     /**
      * Construct a instance of the resource.
      */
-    public function __construct()
-    {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id ?? null;
-        // $this->middleware(['role:nursery_Owner|superAdmin|permission:Nursery-Profile']);
-    }
+   
 
     /**
      * Display a listing of the resource.
@@ -155,6 +151,6 @@ class NurseriesController extends Controller
     // Display a listing of the resource.
     public function nurseryUsers()
     {
-        return contentResponse(Employee::where('nursery_id', $this->nursery_id)->with('user')->get(), 'Fetches Users Nurseries Successfully');
+        return contentResponse(Employee::where('nursery_id', nursery_id())->with('user')->get(), 'Fetches Users Nurseries Successfully');
     }
 }

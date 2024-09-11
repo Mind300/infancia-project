@@ -9,14 +9,12 @@ use App\Models\Policy;
 class PolicyController extends Controller
 {
     // Variables
-    private $nursery_id;
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|permission:Nursery-Profile|Nursery-Policy']);
     }
 
@@ -25,7 +23,7 @@ class PolicyController extends Controller
      */
     public function index()
     {
-        $policies = Policy::where('nursery_id', $this->nursery_id)->get();
+        $policies = Policy::where('nursery_id', nursery_id())->get();
         return contentResponse($policies, fetchAll('Nurseries Policeies'));
     }
 
@@ -35,7 +33,7 @@ class PolicyController extends Controller
     public function store(PolicyRequest $request)
     {
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
 
         $policy = Policy::create($requestValidated);
         return contentResponse($policy, 'Policy created successfully');   
@@ -55,7 +53,7 @@ class PolicyController extends Controller
     public function update(PolicyRequest $request, $id)
     {
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         
         $policy = Policy::findOrFail($id)->update($requestValidated);
         return contentResponse($policy, 'Policy updated successfully');
