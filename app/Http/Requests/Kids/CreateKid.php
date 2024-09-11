@@ -25,7 +25,7 @@ class CreateKid extends FormRequest
             // Users
             'media' => 'sometimes|image',
             'name' =>  'required|string',
-            'email' =>  'required|email:filter|unique:users,email',
+            'email' =>  'required|email:filter',
             'phone' =>  'required|string|unique:users,phone',
             'city' =>  'required|string',
             'address' =>  'required|string',
@@ -38,13 +38,13 @@ class CreateKid extends FormRequest
             'has_medical_case' =>  'required|integer',
 
             // Parents
-            'father_mobile' =>  'required|string',
-            'father_name' =>  'required|string',
-            'father_job' =>  'required|string',
-            'mother_name' =>  'required|string',
-            'mother_mobile' =>  'required|string',
-            'mother_job' =>  'required|string',
-            'emergency_phone' =>  'required|string',
+            'father_mobile' =>  'sometimes|string',
+            'father_name' =>  'sometimes|string',
+            'father_job' =>  'sometimes|string',
+            'mother_name' =>  'sometimes|string',
+            'mother_mobile' =>  'sometimes|string',
+            'mother_job' =>  'sometimes|string',
+            'emergency_phone' =>  'sometimes|string',
             'password' => 'sometimes|string'
         ];
     }
