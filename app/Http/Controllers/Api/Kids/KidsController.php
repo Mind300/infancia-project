@@ -27,7 +27,8 @@ class KidsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth:api|role:nursery_Owner|teacher|parent|permission:Manage-Classes']);
+        $this->middleware(['auth:api']);
+        $this->middleware(['role:nursery_Owner|teacher|permission:Manage-Classes']);
     }
 
     /**
@@ -35,7 +36,7 @@ class KidsController extends Controller
      */
     public function index()
     {
-        $kids = Kids::where('nursery_id', nursery_id()())->get();
+        $kids = Kids::where('nursery_id', nursery_id())->get();
         $kidsWithMedia = $kids->map(function ($kid) {
             $kid->getFirstMedia('Kids');
             return [

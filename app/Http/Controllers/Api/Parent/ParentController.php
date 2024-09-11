@@ -8,15 +8,11 @@ use Illuminate\Http\Request;
 
 class ParentController extends Controller
 {
-    // Variables
-    private $user_id;
-
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->user_id = auth()->user()->id;
         $this->middleware(['role:parent']);
     }
 
@@ -25,7 +21,7 @@ class ParentController extends Controller
      */
     public function index()
     {
-        $parents = Parents::with('kids')->where('user_id', $this->user_id)->get();
+        $parents = Parents::with('kids')->where('user_id', user_id())->get();
         $parent = $parents->flatMap(function ($parent) {
             return $parent->kids->map(function ($kid) {
                 return [
