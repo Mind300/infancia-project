@@ -18,7 +18,6 @@ class GalleryController extends Controller
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|parent']);
     }
 
@@ -37,7 +36,7 @@ class GalleryController extends Controller
     public function store(AlbumRequest $request)
     {
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
 
         $album = Album::create($requestValidated);
         return messageResponse('Album Adding Successfully');
@@ -81,7 +80,7 @@ class GalleryController extends Controller
     public function update(AlbumUpdateRequest $request, string $album_id)
     {
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         $album = Album::findOrFail($album_id)->update($requestValidated);
         return messageResponse('Album Updating Successfully');
     }

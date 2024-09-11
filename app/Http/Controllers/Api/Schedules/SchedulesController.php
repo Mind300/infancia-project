@@ -12,15 +12,12 @@ use Illuminate\Support\Facades\DB;
 class SchedulesController extends Controller
 {
     // Variables
-    private $nursery_id;
-    private $class_id;
 
     /**
      * Construct a instance of the resource.
      */
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|permission:Managae-Classes']);
     }
 
@@ -29,7 +26,7 @@ class SchedulesController extends Controller
      */
     public function index()
     {
-        $schedule = Schedule::where('nursery_id', $this->nursery_id)->get();
+        $schedule = Schedule::where('nursery_id', nursery_id())->get();
         return contentResponse($schedule, fetchAll('Schedules'));
     }
 
@@ -41,7 +38,7 @@ class SchedulesController extends Controller
         DB::beginTransaction();
         try {
             $requestValidated = $request->validated();
-            $requestValidated['nursery_id'] = $this->nursery_id;
+            $requestValidated['nursery_id'] = nursery_id();
             $schedule = Schedule::create($requestValidated);
             DB::commit();
             return messageResponse('Added Schedule Successfully');
@@ -83,7 +80,7 @@ class SchedulesController extends Controller
         DB::beginTransaction();
         try {
             $requestValidated = $request->validated();
-            $requestValidated['nursery_id'] = $this->nursery_id;
+            $requestValidated['nursery_id'] = nursery_id();
             $schedule->update($requestValidated);
             DB::commit();
             return messageResponse('Updated Schedule Successfully');

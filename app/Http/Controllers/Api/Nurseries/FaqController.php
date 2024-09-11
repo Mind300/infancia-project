@@ -13,7 +13,6 @@ class FaqController extends Controller
 
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|parent|permission:Faq']);
     }
     /**
@@ -21,7 +20,7 @@ class FaqController extends Controller
      */
     public function index()
     {
-        $faq = Faq::where('nursery_id', $this->nursery_id)->get();
+        $faq = Faq::where('nursery_id', nursery_id())->get();
         return contentResponse($faq, fetchAll('FAQ'));
     }
 
@@ -32,7 +31,7 @@ class FaqController extends Controller
     {
         DB::beginTransaction();
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         try {
             $faq = Faq::create($requestValidated);
             DB::commit();
@@ -66,7 +65,7 @@ class FaqController extends Controller
     {
         DB::beginTransaction();
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         try {
             $faq->update($requestValidated);
             DB::commit();

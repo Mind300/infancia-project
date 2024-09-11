@@ -12,11 +12,9 @@ use Illuminate\Support\Facades\DB;
 class ReviewsController extends Controller
 {
     // Variables
-    private $nursery_id;
 
     public function __construct()
     {
-        $this->nursery_id = auth()->user()->nursery->id ?? auth()->user()->parent->nursery_id ?? auth()->user()->employee->nursery_id;
         $this->middleware(['role:nursery_Owner|teacher|parent|permission:Nursery-Profile']);
     }
 
@@ -47,14 +45,14 @@ class ReviewsController extends Controller
         DB::beginTransaction();
         try {
             $requestValidated = $request->validated();
-            $requestValidated['nursery_id'] = $this->nursery_id;
+            $requestValidated['nursery_id'] = nursery_id();
             $reviews = Reviews::create($requestValidated);
 
             // Recalculate the average rating after the new review is added
-            $avgRate = Reviews::where('nursery_id', $this->nursery_id)
+            $avgRate = Reviews::where('nursery_id', nursery_id())
                 ->avg(DB::raw('rate / 10 * 5')); // Assuming 'rate' is out of 10
 
-            $nurseryRate = Nurseries::find($this->nursery_id)->update(['rateing' => $avgRate]);
+            $nurseryRate = Nurseries::find(nursery_id())->update(['rateing' => $avgRate]);
 
             DB::commit();
             return messageResponse('Created Review Successfully');
@@ -80,7 +78,7 @@ class ReviewsController extends Controller
     {
         DB::beginTransaction();
         $requestValidated = $request->validated();
-        $requestValidated['nursery_id'] = $this->nursery_id;
+        $requestValidated['nursery_id'] = nursery_id();
         try {
             $reviews = $review->update($requestValidated);
             DB::commit();
