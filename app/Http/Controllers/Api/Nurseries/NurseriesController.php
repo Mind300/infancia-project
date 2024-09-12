@@ -30,7 +30,7 @@ class NurseriesController extends Controller
     public function __construct()
     {
         $this->middleware('role:nursery_Owner')->only(['nurseryUsers', 'edit', 'update']);
-        $this->middleware('role:superAdmin')->only(['nurserySetStatus', 'nurseryApproved', 'destroy', 'blocked']);
+        $this->middleware('role:superAdmin')->only(['show','nurserySetStatus', 'nurseryApproved', 'destroy', 'blocked']);
     }
 
     /**
@@ -136,29 +136,30 @@ class NurseriesController extends Controller
         try {
             // Find the nursery with a specific email (this is hard-coded and should be parameterized)
             $nursery = Nurseries::findOrFail($request->validated('nursery_id'));
+            // Process approval if status is 'accepted'
+            self::$creatingNursery = true;
+
+            // Create a user associated with the nursery
+            $user = User::create($nursery->toArray());
+            $token = Password::createToken($user);
+            $nursery->update(['user_id' => $user->id, 'status' => $request->validated('status')]);
+
+            // Assign roles and teams to the user
+            $role = Role::where('name', 'nursery_Owner')->first();
+            $team = Team::create(['name' => $nursery->name . 'Team']);
+            $user->addRole($role, $team);
+            $user->syncRoles([$role], $team);
+            $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
+            $user->syncRoles([$role], $team);
+
             if ($request->validated('status') === 'accepted') {
-                // Process approval if status is 'accepted'
-                self::$creatingNursery = true;
-
-                // Create a user associated with the nursery
-                $user = User::create($nursery->toArray());
-                $token = Password::createToken($user);
-                $nursery->update(['user_id' => $user->id]);
-
-                // Assign roles and teams to the user
-                $role = Role::where('name', 'nursery_Owner')->first();
-                $team = Team::create(['name' => $nursery->name . 'Team']);
-                $user->addRole($role, $team);
-                $user->syncRoles([$role], $team);
-                $teacher = Role::create(['name' => 'teacher', 'team_id' => $team->id]);
-                $user->syncRoles([$role], $team);
-
-                DB::commit();
+                // Notify about accepted
                 $nursery->notify(new ApprovedNotification($token));
             } else {
                 // Notify about rejection
                 $nursery->notify(new RejectedNotification($nursery));
             }
+            DB::commit();
             return messageResponse('Nursery Is ' . $request->validated('status'));
         } catch (\Throwable $error) {
             return messageResponse($error->getMessage(), 403);

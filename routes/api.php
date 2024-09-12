@@ -41,7 +41,7 @@ Route::group(['middleware' => 'api'], function () {
 
 // ======================= Guest User ========================= //
 Route::apiResource('guest/nurseries', 'Guest\GuestController');
-Route::post('nurseries', 'Nurseries\NurseriesController@store')->name('nurseries.store');
+Route::post('nurseries-create', 'Nurseries\NurseriesController@store')->name('nurseries.store');
 
 // ===================== SuperAdmin User ====================== //
 Route::group(['middleware' => 'auth:api', 'role:superAdmin'], function () {
