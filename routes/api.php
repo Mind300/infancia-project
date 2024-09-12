@@ -46,6 +46,7 @@ Route::post('nurseries-create', 'Nurseries\NurseriesController@store')->name('nu
 // ===================== SuperAdmin User ====================== //
 Route::group(['middleware' => 'auth:api', 'role:superAdmin'], function () {
     // Nursery Approved && Nursery Status
+    Route::get('superAdmin-statistics', 'SuperAdmin\SuperAdminStatistics@superAdminStatistics');
     Route::post('nursery-set-status', 'Nurseries\NurseriesController@nurserySetStatus');
     Route::post('nursery-approved', 'Nurseries\NurseriesController@nurseryApproved');
     Route::get('nursery-blocked/{nursery}', 'Nurseries\NurseriesController@blocked')->name('nurseries.blocked');
