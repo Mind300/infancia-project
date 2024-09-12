@@ -44,7 +44,7 @@ class UsersController extends Controller
             $user->syncRoles([$role], $team);
             $data = ['type' => $role->name, 'user_id' => $user->id, 'nursery_id' => nursery_id(),];
 
-            if ($role->name == 'teacher') {
+            if ($role->name == 'teacher' && $request->has('classes')) {
                 foreach ($request->validated('classes') as $class) {
                     ManageClass::create(['user_id' => $user->id, 'class_id' => $class['class_id'], 'nursery_id' => nursery_id()]);
                 }
