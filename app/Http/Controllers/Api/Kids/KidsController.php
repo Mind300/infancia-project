@@ -29,7 +29,7 @@ class KidsController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['auth:api', 'role:nursery_Owner|teacher|permission:Manage-Classes']);
+        $this->middleware(['auth:api', 'role:nursery_Owner|teacher|parent|permission:Manage-Classes']);
     }
 
     /**
@@ -71,11 +71,11 @@ class KidsController extends Controller
             $user = User::firstWhere('email', $requestValidated['email']);
             if (!$user) {
                 // Create new user and parent if not found
-                $requestValidated['password'] = Str::random(5);
                 $user = User::create($requestValidated);
+                $requestValidated['password'] = $user->phone . '@';
                 $requestValidated['user_id'] = $user->id;
                 $parent = Parents::create($requestValidated);
-                $user->notify(new ParentSendNotification());
+                $user->notify(new ParentSendNotification($requestValidated['password']));
             } else {
                 // Retrieve existing parent
                 $parent = Parents::firstWhere('user_id', $user->id);

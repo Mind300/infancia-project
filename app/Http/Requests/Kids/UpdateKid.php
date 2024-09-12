@@ -28,6 +28,7 @@ class UpdateKid extends FormRequest
 
         return [
             // Users
+            'media' => 'nullable|image',
             'name' =>  'required|string',
             'email' =>  'required|email:filter|unique:users,email,' . $user_id,
             'phone' =>  'required|string|unique:users,phone,' . $user_id,
@@ -35,22 +36,21 @@ class UpdateKid extends FormRequest
             'address' =>  'required|string',
 
             // Kids
-            'media' => 'sometimes|image',
             'kid_name' =>  'required|string',
             'gender' =>  'required|string',
             'birthdate' =>  'required|string',
-            'class_id' =>  'required|integer',
-            'has_medical_case' =>  'required|integer',
-            'address' =>  'required|string',
+            'class_id' =>  'required|integer|exists:classes,id',
+            'has_medical_case' =>  'nullable|integer',
 
             // Parents
-            'father_mobile' =>  'sometimes|string',
-            'father_name' =>  'sometimes|string',
-            'father_job' =>  'sometimes|string',
-            'mother_name' =>  'sometimes|string',
-            'mother_mobile' =>  'sometimes|string',
-            'mother_job' =>  'sometimes|string',
-            'password' => 'sometimes|string'
+            'father_mobile' =>  'nullable|string',
+            'father_name' =>  'nullable|string',
+            'father_job' =>  'nullable|string',
+            'mother_name' =>  'nullable|string',
+            'mother_mobile' =>  'nullable|string',
+            'mother_job' =>  'nullable|string',
+            'emergency_phone' =>  'nullable|string',
+            'password' => 'nullable|string'
         ];
     }
 }

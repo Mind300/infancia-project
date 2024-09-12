@@ -14,9 +14,9 @@ class ParentSendNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct(public $password)
     {
-        //
+        $this->password = $password;
     }
 
     /**
@@ -37,11 +37,14 @@ class ParentSendNotification extends Notification
         return (new MailMessage)
             ->greeting('Welcome ' . $notifiable->name . ',')
             ->line('Your account with Infancia has been successfully created.')
+            ->line('Here are your login details:')
+            ->line('**Email:** ' . $notifiable->email)
+            ->line('**Password:** [' . $this->password . ' ]')
             ->line('You can now start using our platform to manage and view your child’s activities, schedule, and more.')
-            ->line('If you have any questions or need further assistance, please do not hesitate to contact us:')
-            ->line('**Email:** [support@infancia.com](mailto:support@infancia.com)')
-            ->line('**Phone:** +202 22746241')
-            ->line('---')
+            // ->line('If you have any questions or need further assistance, please do not hesitate to contact us:')
+            // ->line('**Email:** [support@infancia.com](mailto:support@infancia.com)')
+            // ->line('**Phone:** +202 22746241')
+            // ->line('---')
             ->line('Thank you for choosing **Infancia**. We are excited to support you and your child on this journey.')
             ->salutation('Best regards, Infancia Team');
     }

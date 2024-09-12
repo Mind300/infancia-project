@@ -18,7 +18,7 @@ class SchedulesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['role:nursery_Owner|teacher|permission:Managae-Classes']);
+        $this->middleware(['role:nursery_Owner|teacher|parent|permission:Managae-Classes']);
     }
 
     /**

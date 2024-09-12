@@ -16,6 +16,10 @@ return [
             'Roles' => true,
             'Nursery-Approved' => true,
             'Nursery-SetStatus' => true,
+            'Nurseries' => true,
+            'Payment-History' => true,
+            'Admins' => true,
+            'Nurseries' => true,
         ],
 
         'nursery_Owner' => [

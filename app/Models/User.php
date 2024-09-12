@@ -119,7 +119,7 @@ class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUse
         static::creating(function ($model) {
             // Check the context flag   
             if (KidsController::$creatingKid) {
-                $model->password = $model->email;
+                $model->password  = $model->phone . '@';
             }
             if (NurseriesController::$creatingNursery) {
                 $model->password = Str::random(5);
