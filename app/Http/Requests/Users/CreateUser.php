@@ -28,8 +28,8 @@ class CreateUser extends FormRequest
             'phone' => 'required|unique:users,phone',
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string',
-            'classes' => 'sometimes|array',
-            'classes.*.class_id' => 'sometimes|integer',
+            'classes' => 'nullable|array',
+            'classes.*.class_id' => 'nullable|integer',
         ];
     }
 }
