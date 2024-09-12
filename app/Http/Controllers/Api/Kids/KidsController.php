@@ -82,7 +82,7 @@ class KidsController extends Controller
             $kid = Kids::create($requestValidated);
 
             // Handle media upload if provided
-            if ($request->has('media')) {
+            if ($request->hasFile('media')) {
                 $kid->addMediaFromRequest('media')->toMediaCollection('Kids');
             }
 

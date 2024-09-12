@@ -49,11 +49,9 @@ class UsersController extends Controller
                     ManageClass::create(['user_id' => $user->id, 'class_id' => $class['class_id'], 'nursery_id' => nursery_id()]);
                 }
             }
-
             if (nursery_id()) {
                 Employee::create($data);
             }
-
             DB::commit();
             return messageResponse('Success, User Created Successfully');
         } catch (\Throwable $error) {

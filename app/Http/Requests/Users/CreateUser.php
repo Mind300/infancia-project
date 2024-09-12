@@ -29,7 +29,7 @@ class CreateUser extends FormRequest
             'password' => 'required|string|min:8|confirmed',
             'role' => 'required|string',
             'classes' => 'sometimes|array',
-            'classes.*.class_id' => 'required|integer',
+            'classes.*.class_id' => 'sometimes|integer',
         ];
     }
 }
