@@ -23,7 +23,8 @@ class CreateKid extends FormRequest
      */
     public function rules(): array
     {
-        $user = User::firstWhere('email', $this->input('email')) ?? null;
+        $user = User::firstWhere('email', $this->input('email'));
+        $user_id = $user->id ?? null;
         return [
             // Users
             'media' => 'sometimes|image',

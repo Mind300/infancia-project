@@ -3,7 +3,6 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-
 use App\Http\Controllers\Api\Kids\KidsController;
 use App\Http\Controllers\Api\Nurseries\NurseriesController;
 use Tymon\JWTAuth\Contracts\JWTSubject;

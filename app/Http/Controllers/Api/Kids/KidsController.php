@@ -11,10 +11,12 @@ use App\Models\Classes;
 use App\Models\Kids;
 use App\Models\Parents;
 use App\Models\User;
+use App\Notifications\ParentSendNotification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
+use Illuminate\Support\Str;
 
 class KidsController extends Controller
 {
@@ -69,9 +71,11 @@ class KidsController extends Controller
             $user = User::firstWhere('email', $requestValidated['email']);
             if (!$user) {
                 // Create new user and parent if not found
+                $requestValidated['password'] = Str::random(5);
                 $user = User::create($requestValidated);
                 $requestValidated['user_id'] = $user->id;
                 $parent = Parents::create($requestValidated);
+                $user->notify(new ParentSendNotification());
             } else {
                 // Retrieve existing parent
                 $parent = Parents::firstWhere('user_id', $user->id);
@@ -97,7 +101,6 @@ class KidsController extends Controller
             $user->syncRoles([$role], $team->id);
 
             DB::commit();
-
             return messageResponse('Created Kid Successfully');
         } catch (\Throwable $error) {
             DB::rollBack();
