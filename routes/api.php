@@ -49,6 +49,7 @@ Route::group(['middleware' => 'auth:api', 'role:superAdmin'], function () {
     Route::post('nursery-set-status', 'Nurseries\NurseriesController@nurserySetStatus');
     Route::post('nursery-approved', 'Nurseries\NurseriesController@nurseryApproved');
     Route::get('nursery-blocked/{nursery}', 'Nurseries\NurseriesController@blocked')->name('nurseries.blocked');
+    Route::get('nurseries-payment/histories', 'Payments\PaymentHistoryController@paymentHistoryNurseries');
     // Roles
     Route::apiResource('roles', 'Roles\RoleController');
 });
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth:api', 'role:superAdmin'], function () {
 // Nurseris
 Route::group(['middleware' => 'auth:api'], function () {
     Route::apiResource('nurseries', 'Nurseries\NurseriesController');
+    Route::get('nursery-payment/histories/{nursery}', 'Nurseries\NurseriesController@paymentHistoryNursery');
     Route::get('all-nurseries/{status}', 'Nurseries\NurseriesController@index')->name('nurseries.index');
     Route::get('nurseies-users', 'Nurseries\NurseriesController@nurseryUsers');
     Route::apiResource('nursery-album', 'Nurseries\GalleryController');

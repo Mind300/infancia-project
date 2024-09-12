@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 
 use App\Models\Employee;
 use App\Models\Nurseries;
+use App\Models\PaymentHistory;
 use App\Models\User;
 use Laratrust\Models\Role;
 use Laratrust\Models\Team;
@@ -19,6 +20,7 @@ use App\Notifications\RegitserNotification;
 use App\Notifications\ApprovedNotification;
 use App\Notifications\paymentSuccessNotification;
 use App\Notifications\RejectedNotification;
+use Carbon\Carbon;
 
 class NurseriesController extends Controller
 {
@@ -29,8 +31,8 @@ class NurseriesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('role:nursery_Owner')->only(['nurseryUsers', 'edit', 'update']);
-        $this->middleware('role:superAdmin')->only(['show','nurserySetStatus', 'nurseryApproved', 'destroy', 'blocked']);
+        $this->middleware('role:nursery_Owner')->only(['nurseryUsers', 'edit', 'update', 'paymentHistoryNursery']);
+        $this->middleware('role:superAdmin')->only(['show', 'nurserySetStatus', 'nurseryApproved', 'destroy', 'blocked']);
     }
 
     /**
@@ -155,6 +157,16 @@ class NurseriesController extends Controller
             if ($request->validated('status') === 'accepted') {
                 // Notify about accepted
                 $nursery->notify(new ApprovedNotification($token));
+                $paymentHistory = PaymentHistory::create([
+                    'package_name' => 'Gold', // Example package name
+                    'success' => true,
+                    'amount' => 0.00,
+                    'intial_payment' => Carbon::now()->toDateString(),
+                    'next_payment' => Carbon::now()->addMonth()->toDateString(),
+                    'saved_card' => false,
+                    'user_id' => $user->id,
+                    'nursery_id' => $nursery->id
+                ]);
             } else {
                 // Notify about rejection
                 $nursery->notify(new RejectedNotification($nursery));
@@ -178,7 +190,6 @@ class NurseriesController extends Controller
 
             // Find the nursery with a specific email (this is hard-coded and should be parameterized)
             $nursery = Nurseries::find($nursery_id);
-            dd($nursery);
 
             // Create a user associated with the nursery
             $user = User::create($nursery->toArray());
@@ -223,5 +234,17 @@ class NurseriesController extends Controller
         $account = $nursery->user()->withTrashed()->first();
         $account->deleted_at ? $account->restore() : $account->delete();
         return messageResponse(($account->deleted_at ? 'Blocked ' : 'Restore ') . $nursery->name . ' Successfully');
+    }
+
+    /**
+     * Block or Unblock the specified nursery.
+     *
+     * @param Nurseries $nursery
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function paymentHistoryNursery(Nurseries $nursery)
+    {
+        $paymentHistroy = PaymentHistory::where('nursery_id', $nursery->id)->get();
+        return contentResponse($paymentHistroy);
     }
 }
