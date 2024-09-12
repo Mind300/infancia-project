@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Nurseries;
 use App\Models\User;
-use App\Notifications\ApproveNotification;
-use App\Notifications\DemoNotification;
 use App\Notifications\RegitserNotification;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Password;
 
 class Controller extends BaseController
 {
@@ -17,7 +15,7 @@ class Controller extends BaseController
 
     public function demoMail()
     {
-        $user = User::find(2);
+        $user = Nurseries::find(1);
         $user->notify(new RegitserNotification());
     }
 }

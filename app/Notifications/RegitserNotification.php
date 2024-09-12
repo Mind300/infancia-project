@@ -12,14 +12,6 @@ class RegitserNotification extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @return array<int, string>
@@ -29,21 +21,20 @@ class RegitserNotification extends Notification
         return ['mail'];
     }
 
-   /**
+    /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->greeting('Dear ' . $notifiable->name . ',')
+            ->greeting('Welcome ' . $notifiable->name . ',')
             ->line('We are pleased to confirm that we have received your nursery registration with **Infancia**. Our team is currently reviewing your submission, and we will notify you once the review is complete.')
             ->line('In the meantime, if you have any questions or need further assistance, please feel free to contact us:')
             ->line('**Email:** [info@infanica.com](mailto:info@infanica.com)')
             ->line('**Phone:** +202 22746241')
-            ->line('---') // Horizontal rule
-            ->action('test', env('app_url'))
+            ->line('---')
             ->line('Thank you for trusting **Infancia** with your nursery\'s registration. We look forward to working with you.')
-            ->salutation('Best regards,');
+            ->salutation('Best regards, Infancia Team');
     }
 
     /**

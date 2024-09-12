@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
             // // Admin Seeder Test
             UsersTableSeeder::class,
             // // Nursery Seeder Test
-            NurseriesTableSeeder::class,
+            // NurseriesTableSeeder::class,
             // // FAQS Seeder Test
             // FAQsTableSeeder::class,
             // // Policies Seeder Test

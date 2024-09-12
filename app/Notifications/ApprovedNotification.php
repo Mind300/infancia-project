@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class paymentSuccessNotification extends Notification
+class ApprovedNotification extends Notification
 {
     use Queueable;
 
@@ -29,9 +29,6 @@ class paymentSuccessNotification extends Notification
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
     public function toMail(object $notifiable): MailMessage
     {
         $url = env('FRONTEND_URL') . 'token=' . $this->token . '&&email=' . $notifiable->email;
@@ -48,15 +45,8 @@ class paymentSuccessNotification extends Notification
             ->salutation('Best regards, Infancia Team');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(object $notifiable): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 }

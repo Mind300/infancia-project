@@ -35,7 +35,7 @@ class UpdateKid extends FormRequest
             'address' =>  'required|string',
 
             // Kids
-            'media' => 'required|image',
+            'media' => 'sometimes|image',
             'kid_name' =>  'required|string',
             'gender' =>  'required|string',
             'birthdate' =>  'required|string',
@@ -44,12 +44,12 @@ class UpdateKid extends FormRequest
             'address' =>  'required|string',
 
             // Parents
-            'father_mobile' =>  'required|string',
-            'father_name' =>  'required|string',
-            'father_job' =>  'required|string',
-            'mother_name' =>  'required|string',
-            'mother_mobile' =>  'required|string',
-            'mother_job' =>  'required|string',
+            'father_mobile' =>  'sometimes|string',
+            'father_name' =>  'sometimes|string',
+            'father_job' =>  'sometimes|string',
+            'mother_name' =>  'sometimes|string',
+            'mother_mobile' =>  'sometimes|string',
+            'mother_job' =>  'sometimes|string',
             'password' => 'sometimes|string'
         ];
     }

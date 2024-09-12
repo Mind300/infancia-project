@@ -27,7 +27,7 @@ class CreateNursery extends FormRequest
             'name' => 'required|string|min:3|max:50',
             'email' => 'required|email:filter|unique:users,email|unique:nurseries,email,' . $nursery_id,
             'phone' => 'required|string|unique:users,phone|unique:nurseries,phone',
-            'country' => 'sometimes|string', 
+            'country' => 'sometimes|string',
             'city' => 'sometimes|string',
             'province' => 'sometimes|string',
             'address' => 'required|string',

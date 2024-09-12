@@ -3,12 +3,11 @@
 namespace App\Http\Controllers\Api\Kids;
 
 use App\Http\Controllers\Controller;
-
 // Requests
 use App\Http\Requests\Kids\CreateKid;
 use App\Http\Requests\Kids\UpdateKid;
-use App\Models\Classes;
 // Models
+use App\Models\Classes;
 use App\Models\Kids;
 use App\Models\Parents;
 use App\Models\User;
@@ -19,20 +18,22 @@ use Laratrust\Models\Team;
 
 class KidsController extends Controller
 {
-    // Variables
+    // Flag to track if a kid is being created
     public static $creatingKid = false;
 
     /**
-     * Construct a instance of the resource.
+     * Construct a new instance of the controller.
+     * Apply middleware for authentication and role-based access.
      */
     public function __construct()
     {
-        $this->middleware(['auth:api']);
-        $this->middleware(['role:nursery_Owner|teacher|permission:Manage-Classes']);
+        $this->middleware(['auth:api', 'role:nursery_Owner|teacher|permission:Manage-Classes']);
     }
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of kids for the current nursery.
+     * 
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -48,41 +49,50 @@ class KidsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created kid in the database.
+     * 
+     * @param CreateKid $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(CreateKid $request)
     {
         DB::beginTransaction();
 
         try {
-            // Set the context flag
+            // Set the context flag for creating a kid
             self::$creatingKid = true;
 
-            // Add Nursery Id In Request
+            // Validate and augment the request data
             $requestValidated = $request->validated();
             $requestValidated['nursery_id'] = nursery_id();
 
-            // Create Kids & (Parents - User)
-            $user = User::create($requestValidated);
+            $user = User::firstWhere('email', $requestValidated['email']);
+            if (!$user) {
+                // Create new user and parent if not found
+                $user = User::create($requestValidated);
+                $requestValidated['user_id'] = $user->id;
+                $parent = Parents::create($requestValidated);
+            } else {
+                // Retrieve existing parent
+                $parent = Parents::firstWhere('user_id', $user->id);
+            }
 
-            $requestValidated['user_id'] = $user->id;
-            $parents = Parents::create($requestValidated);
-
-            $requestValidated['parent_id'] = $parents->id;
+            // Create the kid
+            $requestValidated['parent_id'] = $parent->id;
             $kid = Kids::create($requestValidated);
 
+            // Handle media upload if provided
             if ($request->has('media')) {
                 $kid->addMediaFromRequest('media')->toMediaCollection('Kids');
             }
 
-            // Increment Kid Count
+            // Update class kids count
             $class = Classes::find($request->class_id);
             $class->increment('kids_count');
 
-            // Assign Role As a Parent
+            // Assign the 'parent' role to the user
             $team = Team::where('name', auth()->user()->name . 'Team')->first();
             $role = Role::where('name', 'parent')->first();
-
             $user->addRole($role, $team->id);
             $user->syncRoles([$role], $team->id);
 
@@ -96,7 +106,10 @@ class KidsController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified kid.
+     * 
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show(string $id)
     {
@@ -106,7 +119,10 @@ class KidsController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified kid.
+     * 
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function edit(string $id)
     {
@@ -116,7 +132,11 @@ class KidsController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified kid's details.
+     * 
+     * @param UpdateKid $request
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(UpdateKid $request, string $id)
     {
@@ -127,8 +147,11 @@ class KidsController extends Controller
             $parent = Parents::find($kid->parent_id);
             $user = User::find($parent->user_id);
 
+            // Update the kid, parent, and user details
             $kid->update($request->validated());
-            $kid->addMediaFromRequest('media')->toMediaCollection('Kids');
+            if ($request->hasFile('media')) {
+                $kid->addMediaFromRequest('media')->toMediaCollection('Kids');
+            }
             $parent->update($request->validated());
             $user->update($request->validated());
 
@@ -142,15 +165,20 @@ class KidsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified kid from storage.
+     * 
+     * @param Kids $kid
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Kids $kid)
     {
         DB::beginTransaction();
         try {
+            // Decrement the kid count in the associated class
             $class = Classes::findOrFail($kid->class_id);
             $class->decrement('kids_count');
 
+            // Permanently delete the kid record
             $kid->forceDelete();
             DB::commit();
             return messageResponse('Deleted Kid Successfully');
@@ -161,21 +189,20 @@ class KidsController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Retrieve and display kids with birthdays in the specified month.
+     * 
+     * @param string $accessMonth
+     * @return \Illuminate\Http\JsonResponse
      */
     public function birthdayKids($accessMonth)
     {
-        if ($accessMonth == 'thisMonth') {
-            $month = Carbon::now()->month;
-        } else {
-            $month = Carbon::now()->addMonth()->month;
-        }
+        $month = ($accessMonth === 'thisMonth') ? Carbon::now()->month : Carbon::now()->addMonth()->month;
 
         $today = Carbon::today()->startOfDay();
         $kidsBirth = Kids::whereMonth('birthdate', $month)->where('nursery_id', nursery_id())->get();
 
         $kids = $kidsBirth->map(function ($kid) use ($today) {
-            $birthdateKid =  Carbon::parse($kid->birthdate);
+            $birthdateKid = Carbon::parse($kid->birthdate);
             $birthDayThisYear = $birthdateKid->copy()->year($today->year);
 
             if ($birthDayThisYear < $today) {
@@ -192,6 +219,6 @@ class KidsController extends Controller
             ];
         });
 
-        return contentResponse($kids, fetchAll('Kids Birthday Upcomming'));
+        return contentResponse($kids, fetchAll('Kids Birthday Upcoming'));
     }
 }

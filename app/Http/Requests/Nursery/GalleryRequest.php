@@ -24,7 +24,6 @@ class GalleryRequest extends FormRequest
         return [
             'album_id' => 'sometimes|integer',
             'media' => 'required|image|mimes:jpeg,png,jpg,gif|max:8192',
-            // 'media.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ];
     }
 }

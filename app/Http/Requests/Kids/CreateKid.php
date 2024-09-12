@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Kids;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateKid extends FormRequest
@@ -22,12 +23,13 @@ class CreateKid extends FormRequest
      */
     public function rules(): array
     {
+        $user = User::firstWhere('email', $this->input('email')) ?? null;
         return [
             // Users
             'media' => 'sometimes|image',
             'name' =>  'required|string',
             'email' =>  'required|email:filter',
-            'phone' =>  'required|string',
+            'phone' =>  'required|string|unique:users,phone,' . $user->id,
             'city' =>  'required|string',
             'address' =>  'required|string',
 
@@ -35,7 +37,7 @@ class CreateKid extends FormRequest
             'kid_name' =>  'required|string',
             'gender' =>  'required|string',
             'birthdate' =>  'required|string',
-            'class_id' =>  'required|integer',
+            'class_id' =>  'required|integer|exists:classes,id',
             'has_medical_case' =>  'required|integer',
 
             // Parents

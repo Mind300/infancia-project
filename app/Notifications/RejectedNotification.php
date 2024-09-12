@@ -12,14 +12,6 @@ class RejectedNotification extends Notification
     use Queueable;
 
     /**
-     * Create a new notification instance.
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Get the notification's delivery channels.
      *
      * @return array<int, string>
@@ -36,14 +28,14 @@ class RejectedNotification extends Notification
     {
 
         return (new MailMessage)
-            ->greeting('Dear ' . $notifiable->name . ',')
+            ->greeting('Welcome ' . $notifiable->name . ',')
             ->line('We regret to inform you that your nursery registration with **Infancia** has been rejected.')
             ->line('Unfortunately, your application did not meet our criteria for acceptance. We encourage you to review the requirements and reapply in the future if possible.')
             ->line('If you have any questions or need further clarification, please do not hesitate to contact us:')
             ->line('**Email:** [info@infancia.com](mailto:info@infancia.com)')
             ->line('**Phone:** +202 22746241')
             ->line('---')
-            ->salutation('Best regards,');
+            ->salutation('Best regards, Infancia Team');
     }
 
     /**

@@ -1,9 +1,9 @@
 @props(['url'])
 <tr>
     <td class="header">
-        <a href="{{ $url }}" style="display: inline-block;">
-            <!-- <img src="https://laravel.com/img/notification-logo.png" class="logo" alt="Laravel Logo"> -->
-            {{ $slot }}
+        <a href="{{ $url }}" style="display: block;">
+            <img src="https://i.imghippo.com/files/QPRUW1726096655.png" class="logo" alt="Infancia Logo">
         </a>
+        <header style="font-size: large; font-weight: bold;">{{ $slot }}</header>
     </td>
 </tr>

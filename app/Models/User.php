@@ -11,6 +11,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 use Laratrust\Contracts\LaratrustUser;
@@ -23,7 +24,7 @@ use Illuminate\Support\Str;
 
 class User extends Authenticatable implements JWTSubject, HasMedia, LaratrustUser
 {
-    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRolesAndPermissions;
+    use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia, HasRolesAndPermissions, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

@@ -37,17 +37,18 @@ Route::group(['middleware' => 'api'], function () {
     });
 });
 
-// ======================= Guest User ========================= //
-Route::group(['prefix' => 'guest'], function () {
-    // Nurseries
-    Route::apiResource('nurseries', 'Guest\GuestController');
-});
 
+
+// ======================= Guest User ========================= //
+Route::apiResource('guest/nurseries', 'Guest\GuestController');
+Route::post('nurseries', 'Nurseries\NurseriesController@store')->name('nurseries.store');
 
 // ===================== SuperAdmin User ====================== //
-Route::post('nursery-set-status', 'Nurseries\NurseriesController@nurserySetStatus');
-Route::group(['middleware' => 'role:superAdmin', 'auth:api'], function () {
+Route::group(['middleware' => 'auth:api', 'role:superAdmin'], function () {
     // Nursery Approved && Nursery Status
+    Route::post('nursery-set-status', 'Nurseries\NurseriesController@nurserySetStatus');
+    Route::post('nursery-approved', 'Nurseries\NurseriesController@nurseryApproved');
+    Route::get('nursery-blocked/{nursery}', 'Nurseries\NurseriesController@blocked')->name('nurseries.blocked');
     // Roles
     Route::apiResource('roles', 'Roles\RoleController');
 });
@@ -62,7 +63,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
     Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
     Route::delete('nursery-album/delete-photo/{album_id}/{media_id}', 'Nurseries\GalleryController@deletePhoto');
-    Route::post('nursery-approved', 'Nurseries\NurseriesController@nurseryApproved');
     // Reviews Resource
     Route::apiResource('/reviews', 'Nurseries\ReviewsController');
     Route::get('/reviews-nursery/{nursery_id}', 'Nurseries\ReviewsController@index');
@@ -112,3 +112,6 @@ Route::group(['middleware' => 'auth:api'], function () {
         Route::post('users/{user}', 'Users\UsersController@update')->name('users.update');
     });;
 });
+
+
+Route::get('/demoMail', [Controller::class, 'demoMail']);
