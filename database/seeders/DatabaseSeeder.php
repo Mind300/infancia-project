@@ -12,12 +12,12 @@ class DatabaseSeeder extends Seeder
             PermissionsTableSeeder::class,
             // // Admin Seeder Test
             UsersTableSeeder::class,
-            // // Nursery Seeder Test
-            // NurseriesTableSeeder::class,
-            // // FAQS Seeder Test
-            // FAQsTableSeeder::class,
-            // // Policies Seeder Test
-            // PolicyTableSeeder::class,
+            // Nursery Seeder Test
+            NurseriesTableSeeder::class,
+            // FAQS Seeder Test
+            FAQsTableSeeder::class,
+            // Policies Seeder Test
+            PolicyTableSeeder::class,
         ]);
     }
 }
