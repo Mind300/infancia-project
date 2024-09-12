@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Api\Nurseries;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nurseries\NurseryStatusRequest;
 use App\Http\Requests\Nursery\CreateNursery;
-
+use App\Models\Classes;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Password;
 
 use App\Models\Employee;
+use App\Models\Kids;
 use App\Models\Nurseries;
 use App\Models\PaymentHistory;
 use App\Models\User;
@@ -31,7 +32,7 @@ class NurseriesController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('role:nursery_Owner')->only(['nurseryUsers', 'edit', 'update', 'paymentHistoryNursery']);
+        $this->middleware('role:nursery_Owner')->only(['nurseryUsers', 'edit', 'update', 'paymentHistoryNursery', 'nurseryStatistics']);
         $this->middleware('role:superAdmin')->only(['show', 'nurserySetStatus', 'nurseryApproved', 'destroy', 'blocked']);
     }
 
@@ -246,5 +247,33 @@ class NurseriesController extends Controller
     {
         $paymentHistroy = PaymentHistory::where('nursery_id', $nursery->id)->get();
         return contentResponse($paymentHistroy);
+    }
+    /**
+     * Block or Unblock the specified nursery.
+     *
+     * @param Nurseries $nursery
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function nurseryStatistics()
+    {
+        // Find Nursery
+        $nursery = Nurseries::find(nursery_id());
+        // Employees Counts
+        $employees_count = Employee::where('nursery_id', nursery_id())->count();
+        // Employees Teachers Counts
+        $employees_teacher_count = Employee::where('type', 'teacher')->count();
+        // Kids Counts
+        $kids_count = Kids::where('nursery_id', nursery_id())->count();
+        // Classes Counts
+        $classes_count = Classes::where('nursery_id', nursery_id())->count();
+
+        $data = [
+            'employees_count' => $employees_count,
+            'employees_teacher_count' => $employees_teacher_count,
+            'kids_count' => $kids_count,
+            'classes_count' => $classes_count,
+        ];
+
+        return contentResponse($data, 'Nursery Statistics');
     }
 }

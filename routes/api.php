@@ -61,6 +61,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('nursery-payment/histories/{nursery}', 'Nurseries\NurseriesController@paymentHistoryNursery');
     Route::get('all-nurseries/{status}', 'Nurseries\NurseriesController@index')->name('nurseries.index');
     Route::get('nurseies-users', 'Nurseries\NurseriesController@nurseryUsers');
+    Route::get('nurseies-statistics', 'Nurseries\NurseriesController@nurseryStatistics');
     Route::apiResource('nursery-album', 'Nurseries\GalleryController');
     Route::get('nurseies-albums/{nursery_id}', 'Nurseries\GalleryController@index');
     Route::post('nursery-album/add-photo', 'Nurseries\GalleryController@addPhotos');
