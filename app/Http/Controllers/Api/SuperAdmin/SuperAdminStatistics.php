@@ -17,10 +17,10 @@ class SuperAdminStatistics extends Controller
     {
         // Nurseries Accepted
         $nurseries_accepted_count = Nurseries::where('status', 'accepted')->count();
-
         // Nurseries Count Pending
         $nurseries_pending_count = Nurseries::where('status', 'pending')->count();
-
+        // Nurseries Total Kids Count
+        $total_kids_count = Nurseries::withCount('kids')->get()->setVisible(['id', 'name', 'kids_count']);
         // Nurseries Count Pending
         $employees_count = 0;
 
@@ -28,6 +28,7 @@ class SuperAdminStatistics extends Controller
             'nursery_accepted' => $nurseries_accepted_count,
             'nursery_pending' => $nurseries_pending_count,
             'employees_count' => $employees_count,
+            'nurseries_childs' => $total_kids_count,
         ];
         return contentResponse($data, 'SuperAdmin Statistics');
     }

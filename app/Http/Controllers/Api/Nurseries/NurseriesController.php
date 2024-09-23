@@ -44,7 +44,7 @@ class NurseriesController extends Controller
      */
     public function index(string $status)
     {
-        $nursries = Nurseries::where('status', $status)->get();
+        $nursries = Nurseries::withCount('kids')->where('status', $status)->get();
         return contentResponse($nursries, 'Fetches Nurseries Successfully');
     }
 
@@ -95,7 +95,7 @@ class NurseriesController extends Controller
      */
     public function show(string $id)
     {
-        $nursery = Nurseries::find($id);
+        $nursery = Nurseries::withCount('kids')->find($id);
         $nursery->getFirstMedia('Nurseries');
         return contentResponse($nursery, 'content');
     }
